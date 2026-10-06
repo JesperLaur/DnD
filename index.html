@@ -1,365 +1,488 @@
-<!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Blank character sheet</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:wght@500;700;800&family=Alegreya+SC:wght@500;700&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap"><style id="css">
-:root{--paper:#E2E5E8;--sheet:#F5F6F8;--ink:#1B2130;--muted:#586070;--line:#B0B6C0;--soft:#D5DAE0;--accent:#8C2A22;--accent-ink:#FFF6F3;--bronze:#7E6128;color-scheme:light}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#121519;--sheet:#1A1E25;--ink:#E3E6EB;--muted:#9AA2AF;--line:#3A414D;--soft:#262B34;--accent:#E3806F;--accent-ink:#1A0E0C;--bronze:#CFA960;color-scheme:dark}}
-:root[data-theme="dark"]{--paper:#121519;--sheet:#1A1E25;--ink:#E3E6EB;--muted:#9AA2AF;--line:#3A414D;--soft:#262B34;--accent:#E3806F;--accent-ink:#1A0E0C;--bronze:#CFA960;color-scheme:dark}
-:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
-*,*::before,*::after{box-sizing:inherit}
-body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.45 "Alegreya Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Kavrex Thorundar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: a forged-iron character sheet — identity band, stat strip, then a two-column ledger that stacks on phones.
+   Underlined names open a rules card (bottom sheet on phones, centered dialog on wider screens). */
+:root{
+  --bg:#e9ecee; --panel:#f6f7f8; --ink:#1d2329; --muted:#5a6570; --line:#c6ccd2;
+  --accent:#8e2a1c; --accent-soft:#f1dcd6; --brass:#8a6a2c; --accent-ink:#fff6f3;
+  --display:"Cinzel",Georgia,serif; --body:"Alegreya Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+  color-scheme:light; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px)
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#14181c; --panel:#1c2126; --ink:#e3e6e9; --muted:#97a1ab; --line:#323a42;
+  --accent:#e0705a; --accent-soft:#3a2420; --brass:#c9a35a; --accent-ink:#1a0e0c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#14181c; --panel:#1c2126; --ink:#e3e6e9; --muted:#97a1ab; --line:#323a42;
+  --accent:#e0705a; --accent-soft:#3a2420; --brass:#c9a35a; --accent-ink:#1a0e0c; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:17px/1.5 var(--body);margin:0}
 body.locked{overflow:hidden}
-button,input,textarea,select{font:inherit;color:inherit}
-button{cursor:pointer}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.sc{font-family:"Alegreya SC",Georgia,serif;letter-spacing:.03em}
-.serif{font-family:"Alegreya",Georgia,serif}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:20px;padding-block:28px 56px;display:grid;gap:22px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
+h1{font-size:clamp(2rem,6vw,3.2rem);font-weight:900;letter-spacing:.02em;line-height:1.05}
+h2{font-size:1.05rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);padding-bottom:6px;border-bottom:2px solid var(--accent);margin-bottom:12px}
+h3{font-size:.98rem;font-weight:700}
+.eyebrow{font:500 .78rem var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--brass)}
+.sub{color:var(--muted);font-size:1.05rem}
+header{display:grid;gap:8px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.tag{font-size:.85rem;padding:3px 10px;border:1px solid var(--line);border-radius:3px;background:var(--panel)}
+.note{font-size:.92rem;color:var(--muted);background:var(--panel);border-left:3px solid var(--brass);padding:10px 14px;margin:0}
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.stat{background:var(--panel);border:1px solid var(--line);padding:10px 12px;display:grid;gap:2px}
+.stat b{font:700 1.7rem var(--display);font-variant-numeric:tabular-nums}
+.stat span{font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.stat small{font-size:.8rem;color:var(--muted)}
+.abil{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.ab{text-align:center;border:1px solid var(--line);background:var(--panel);padding:10px 4px}
+.ab .n{font:500 .74rem var(--mono);letter-spacing:.1em;color:var(--muted)}
+.ab .m{font:900 1.9rem var(--display);font-variant-numeric:tabular-nums;color:var(--ink)}
+.ab .s{font-size:.85rem;color:var(--muted)}
+.ab.key{border-color:var(--accent)} .ab.key .m{color:var(--accent)}
+.cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.55fr);gap:26px;align-items:start}
+.col{display:grid;gap:26px;min-width:0}
+section{min-width:0}
+.rows{display:grid}
+.row{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px dotted var(--line)}
+.row .v{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.row.p .k::before{content:"◆ ";color:var(--accent);font-size:.75em}
+.row:not(.p) .k{color:var(--muted)}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+th{text-align:left;font:500 .72rem var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:6px 8px;border-bottom:1px solid var(--line)}
+td{padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
+td.n{font-family:var(--mono);white-space:nowrap}
+.feat{display:grid;gap:4px;padding:12px 0;border-bottom:1px solid var(--line)}
+.feat:last-child{border-bottom:0}
+.feat p{margin:0}
+.src{font:500 .7rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--brass);margin-left:6px}
+.oath{background:var(--accent-soft);padding:14px 16px;margin-bottom:6px}
+.oath h3{color:var(--accent)}
+.oath ul{margin:6px 0 0;padding-left:18px}
+.track{display:grid;gap:10px}
+.tr{display:flex;flex-wrap:wrap;align-items:center;gap:10px;justify-content:space-between}
+.pips{display:flex;gap:6px;flex-wrap:wrap}
+.pip{width:22px;height:22px;border:2px solid var(--accent);background:transparent;border-radius:50%;cursor:pointer;padding:0}
+.pip[aria-pressed="true"]{background:var(--accent)}
+:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.loh{display:flex;align-items:center;gap:6px}
+.loh input{width:64px;font:500 1rem var(--mono);padding:3px 6px;background:var(--panel);color:var(--ink);border:1px solid var(--line)}
+.btn{font:500 .85rem var(--body);padding:5px 12px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn.solid{background:var(--ink);color:var(--bg);border-color:var(--ink);font-weight:700}
+.spell{display:grid;gap:2px;padding:9px 0;border-bottom:1px dotted var(--line)}
+.spell p{margin:0;font-size:.95rem;color:var(--muted)}
+.lvl{display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;padding:9px 0;border-bottom:1px solid var(--line)}
+.lvl .L{font:900 1.3rem var(--display);color:var(--accent)}
+.lvl p{margin:0}
+ul.plain{margin:0;padding-left:18px;display:grid;gap:4px}
+.prose p{margin:0 0 10px;max-width:68ch}
+.hint{font-size:.88rem;color:var(--muted);margin:-4px 0 8px}
 
-/* top bar */
-.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--paper);border-bottom:1px solid var(--line)}
-.bar-in{max-width:1180px;margin:0 auto;padding:8px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.bar-name{font-family:"Alegreya",Georgia,serif;font-weight:800;font-size:1.15rem;flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tabs{display:flex;gap:2px;order:3;width:100%}
-.tab{flex:1;background:none;border:0;border-bottom:3px solid transparent;padding:6px 4px;font-family:"Alegreya SC",Georgia,serif;font-size:1rem;color:var(--muted)}
-.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
-.savewrap{display:flex;align-items:center;gap:10px}
-.status{font-size:.85rem;color:var(--muted)}
-.status.dirty{color:var(--accent)}
-.btn{border:1px solid var(--ink);background:var(--ink);color:var(--paper);border-radius:6px;padding:6px 14px;font-weight:700}
-.btn:disabled{opacity:.5;cursor:default}
-.btn.ghost{background:transparent;color:var(--ink)}
-.btn.danger{background:transparent;color:var(--accent);border-color:var(--accent)}
-.btn.accent{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
-@media(min-width:760px){.tabs{order:0;width:auto}.tab{flex:none;padding:6px 14px}}
+/* rule links: any name that opens a rules card */
+.rl{background:none;border:0;padding:0;margin:0;font:inherit;color:inherit;letter-spacing:inherit;text-align:left;cursor:pointer;
+  text-decoration:underline dotted var(--accent);text-decoration-thickness:2px;text-underline-offset:4px}
+.rl:hover{color:var(--accent)}
 
-main{max-width:1180px;margin:0 auto;padding:14px 14px 60px}
-.page[hidden]{display:none}
-
-/* boxes */
-.box{background:var(--sheet);border:1px solid var(--line);border-radius:12px 3px 12px 3px;display:flex;flex-direction:column;min-width:0}
-.box>.body{padding:12px 14px;flex:1}
-.lab{font-family:"Alegreya SC",Georgia,serif;font-size:.85rem;letter-spacing:.05em;color:var(--muted);text-align:center;border-top:1px solid var(--soft);padding:4px 8px 6px}
-
-/* fields */
-.fld{display:flex;flex-direction:column;min-width:0}
-.fld input,.fld textarea,.fld select,.plain{background:transparent;border:0;border-bottom:1px solid var(--line);padding:4px 2px;width:100%;border-radius:0}
-.fld textarea,textarea.plain{border:1px solid var(--soft);border-radius:6px;padding:8px;resize:vertical;line-height:1.45}
-.fl{font-size:.78rem;color:var(--muted);font-family:"Alegreya SC",Georgia,serif;letter-spacing:.04em;padding-top:2px}
-input[type=number]{-moz-appearance:textfield}
-input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-
-/* header */
-.head{display:grid;gap:14px;grid-template-columns:1fr;margin-bottom:14px}
-.cname input{font-family:"Alegreya",Georgia,serif;font-weight:800;font-size:2.4rem;line-height:1.1;border-bottom:2px solid var(--ink);padding:0 2px 4px}
-.meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 16px}
-@media(min-width:760px){.head{grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);align-items:end}.meta{grid-template-columns:repeat(3,minmax(0,1fr))}}
-
-/* sheet grid */
-.grid{display:grid;gap:14px;grid-template-columns:1fr}
-.col{display:flex;flex-direction:column;gap:14px;min-width:0}
-@media(min-width:760px){.grid{grid-template-columns:150px minmax(0,1fr)}.grid>.span2{grid-column:1/-1}}
-@media(min-width:1060px){.grid{grid-template-columns:150px minmax(0,1fr) minmax(0,1.15fr) minmax(0,1fr)}.grid>.span2{grid-column:auto}}
-
-/* abilities */
-.abils{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-@media(min-width:760px){.abils{grid-template-columns:1fr}}
-.abil{background:var(--sheet);border:1px solid var(--line);border-radius:14px 14px 40px 40px/14px 14px 22px 22px;text-align:center;padding:8px 6px 10px;display:flex;flex-direction:column;align-items:center}
-.abil .an{font-family:"Alegreya SC",Georgia,serif;font-size:.85rem;color:var(--muted)}
-.abil .am{font-family:"Alegreya",Georgia,serif;font-weight:800;font-size:2.3rem;line-height:1;margin:2px 0 6px}
-.abil input{width:3.2em;text-align:center;border:1px solid var(--line);border-radius:999px;background:var(--paper);padding:2px 0;font-weight:700}
-
-/* small stat tiles */
-.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.tile{background:var(--sheet);border:1px solid var(--line);border-radius:10px;text-align:center;padding:8px 4px 4px;display:flex;flex-direction:column;justify-content:space-between}
-.tile .big{font-family:"Alegreya",Georgia,serif;font-weight:800;font-size:1.9rem;line-height:1.1}
-.tile input{text-align:center;border:0;background:transparent;width:100%;font-family:"Alegreya",Georgia,serif;font-weight:800;font-size:1.9rem;line-height:1.1;padding:0}
-.tile .fl{text-align:center}
-.shield{border-radius:10px 10px 50% 50%/10px 10px 30% 30%}
-
-.row2{display:flex;gap:10px;align-items:center}
-.insp{display:flex;align-items:center;gap:10px;background:var(--sheet);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
-.insp label{display:flex;align-items:center;gap:8px;font-family:"Alegreya SC",Georgia,serif}
-.insp input[type=checkbox]{width:20px;height:20px;accent-color:var(--accent)}
-.profin{width:2.6em;text-align:center;border:1px solid var(--line);border-radius:999px;background:var(--paper);font-weight:700;padding:2px 0}
-
-/* checks */
-.checks{list-style:none;margin:0;padding:0}
-.checks li{display:flex;align-items:center;gap:8px;padding:3px 0;border-bottom:1px dotted var(--soft)}
-.checks li:last-child{border-bottom:0}
-.checks input{width:18px;height:18px;accent-color:var(--ink);margin:0;flex:none}
-.checks .v{width:2.4em;text-align:right;font-weight:700;font-variant-numeric:tabular-nums;flex:none}
-.checks .ab{color:var(--muted);font-size:.85rem;margin-left:auto}
-.checks label{display:flex;align-items:center;gap:8px;flex:1;cursor:pointer}
-.passive{display:flex;align-items:center;gap:12px;background:var(--sheet);border:1px solid var(--line);border-radius:999px;padding:6px 14px 6px 6px}
-.passive .big{font-family:"Alegreya",Georgia,serif;font-weight:800;font-size:1.4rem;width:2.2em;height:2.2em;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center}
-
-/* hp */
-.hp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:end}
-.hp .cur input{font-family:"Alegreya",Georgia,serif;font-weight:800;font-size:2.6rem;text-align:center;border-bottom:2px solid var(--ink)}
-.hp .fld input{text-align:center}
-.ds{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:center;font-size:.9rem}
-
-/* pips */
-.pips{display:inline-flex;gap:5px;flex-wrap:wrap;vertical-align:middle}.ds .pips{flex-wrap:nowrap}
-.pip{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--ink);background:transparent;padding:0}
-.pip.on{background:var(--ink)}
-.pips.red .pip{border-color:var(--accent)}.pips.red .pip.on{background:var(--accent)}
-
-/* entries */
-.list{display:flex;flex-direction:column}
-.erow{display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap;padding:7px 0;border-bottom:1px solid var(--soft)}
-.ename{background:none;border:0;padding:0;text-align:left;font-weight:700;text-decoration:underline;text-decoration-style:dotted;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:4px}
-.ename:hover{color:var(--accent)}
-.ename.norule{text-decoration-color:var(--line);font-weight:500}
-.erow .atk{font-variant-numeric:tabular-nums;font-weight:700;margin-left:auto}
-.erow .dmg{color:var(--muted);min-width:7.5em;text-align:right}
-.erow .note{color:var(--muted);font-size:.88rem;font-style:italic}
-.erow .pips{margin-left:auto}
-.erow.spell input[type=checkbox]{width:17px;height:17px;accent-color:var(--accent);margin:0}
-.add{background:none;border:1px dashed var(--line);border-radius:6px;color:var(--muted);padding:6px;margin-top:10px}
-.add:hover{color:var(--ink);border-color:var(--ink)}
-.hint{font-size:.85rem;color:var(--muted);margin:0 0 6px}
-
-.coins{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-top:12px}
-.coins .fld input{text-align:center}
-.coins .fl{text-align:center}
-
-/* story */
-.story{display:grid;gap:14px;grid-template-columns:1fr}
-@media(min-width:760px){.story{grid-template-columns:minmax(0,1fr) minmax(0,1.6fr)}}
-.phys{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 16px}
-
-/* spells */
-.spellhead{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:14px}
-@media(min-width:760px){.spellhead{grid-template-columns:2fr 1.3fr 1fr 1fr}}
-.spellgrid{display:grid;gap:14px;grid-template-columns:1fr}
-@media(min-width:760px){.spellgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(min-width:1060px){.spellgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-.lvl summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 14px}
-.lvl summary::-webkit-details-marker{display:none}
-.lvl .ln{font-family:"Alegreya",Georgia,serif;font-weight:800;font-size:1.6rem;width:1.6em;height:1.6em;display:grid;place-items:center;border:1.5px solid var(--ink);border-radius:50%;flex:none;line-height:1}
-.lvl .lt{font-family:"Alegreya SC",Georgia,serif;flex:1}
-.lvl .cnt{color:var(--muted);font-size:.85rem}
-.lvl .body{padding-top:0}
-.slots{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:6px 0 4px;font-size:.9rem;color:var(--muted)}
-.slots input{width:3em;text-align:center;border:1px solid var(--line);border-radius:999px;background:var(--paper);padding:1px 0;color:var(--ink);font-weight:700}
-
-.foot{margin-top:28px;display:flex;justify-content:center}
-
-/* modal */
-.ov{position:fixed;inset:0;background:rgba(10,12,16,.5);z-index:50;display:flex;align-items:flex-end;justify-content:center}
-.modal{background:var(--sheet);color:var(--ink);width:100%;max-width:620px;max-height:88vh;overflow:auto;border-radius:16px 16px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 40px rgba(0,0,0,.25);animation:up .18s ease-out}
-@media(min-width:700px){.ov{align-items:center;padding:20px}.modal{border-radius:14px 4px 14px 4px;max-height:84vh;animation:none}}
+/* rules card */
+.ov{position:fixed;inset:0;background:rgba(10,12,16,.55);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.modal{background:var(--panel);color:var(--ink);width:100%;max-width:620px;max-height:88vh;overflow:auto;border-top:3px solid var(--accent);
+  padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 40px rgba(0,0,0,.3);animation:up .18s ease-out}
+@media (min-width:700px){.ov{align-items:center;padding:20px}.modal{border:1px solid var(--line);border-top:3px solid var(--accent);max-height:84vh;animation:none}}
 @keyframes up{from{transform:translateY(30px);opacity:.4}to{transform:none;opacity:1}}
-@media(prefers-reduced-motion:reduce){.modal{animation:none}}
+@media (prefers-reduced-motion:reduce){.modal{animation:none}}
 .mhead{display:flex;align-items:flex-start;gap:10px}
-.mhead h2{font-family:"Alegreya",Georgia,serif;font-weight:800;font-size:1.75rem;line-height:1.15;margin:0;flex:1}
-.x{background:none;border:1px solid var(--line);border-radius:50%;width:34px;height:34px;font-size:1.2rem;line-height:1;flex:none}
-.tag{color:var(--bronze);font-family:"Alegreya SC",Georgia,serif;margin:4px 0 0}
+.mhead h2{flex:1;border:0;padding:0;margin:0;color:var(--ink);font-size:1.45rem;letter-spacing:.04em;text-transform:none;font-weight:900}
+.x{background:none;border:1px solid var(--line);border-radius:50%;width:34px;height:34px;font-size:1.2rem;line-height:1;flex:none;color:var(--ink);cursor:pointer}
+.mtag{font:500 .74rem var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--brass);margin:6px 0 0}
 .mmeta{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0}
-.chip{border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:.9rem}
-.chip b{font-variant-numeric:tabular-nums}
-.rules{font-family:"Alegreya",Georgia,serif;font-size:1.05rem;line-height:1.6;margin-top:14px;border-top:1px solid var(--soft);padding-top:6px;max-width:62ch}
+.chip{border:1px solid var(--line);padding:2px 10px;font-size:.9rem;background:var(--bg)}
+.chip b{font-family:var(--mono);font-weight:500;font-variant-numeric:tabular-nums}
+.chip.live{border-color:var(--accent);color:var(--accent)}
+.rules{font-size:1.05rem;line-height:1.6;margin-top:14px;border-top:1px solid var(--line);padding-top:4px;max-width:62ch}
 .rules p{margin:10px 0}
-.empty{color:var(--muted);font-style:italic}
-.mact{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;align-items:center}
+.mact{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;align-items:center}
 .mact .sp{flex:1}
-.form{display:grid;gap:12px;margin-top:12px}
-.form .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.modal .form textarea{min-height:220px}
-.msg{font-size:.88rem;color:var(--accent);min-height:1.2em}
-</style></head><body><div id="root"></div><script type="application/json" id="state">{"savedAt":0,"f":{"name":"","classLevel":"","background":"","player":"","race":"","alignment":"","xp":"","str":"10","dex":"10","con":"10","int":"10","wis":"10","cha":"10","prof":"2","insp":false,"ac":"10","speed":"30","hpMax":"","hpCur":"","hpTemp":"","hdType":"","hdTotal":"","dsS":0,"dsF":0,"saves":{},"skills":{},"traits":"","ideals":"","bonds":"","flaws":"","coins":{"cp":"","sp":"","ep":"","gp":"","pp":""},"age":"","height":"","weight":"","eyes":"","skin":"","hair":"","appearance":"","backstory":"","allies":"","orgName":"","symbol":"","addFeatures":"","treasure":""},"attacks":[],"features":[],"prof":[],"equip":[],"sp":{"cls":"","ability":"","levels":[{"slots":"","used":0,"list":[]},{"slots":"","used":0,"list":[]},{"slots":"","used":0,"list":[]},{"slots":"","used":0,"list":[]},{"slots":"","used":0,"list":[]},{"slots":"","used":0,"list":[]},{"slots":"","used":0,"list":[]},{"slots":"","used":0,"list":[]},{"slots":"","used":0,"list":[]},{"slots":"","used":0,"list":[]}]},"lib":{"greatweaponfighting":{"name":"Great Weapon Fighting","tag":"Fighting style","aka":["gwf"],"text":"Applies to damage rolls for attacks with a melee weapon you hold in two hands; the weapon must be two-handed or versatile.\n\n2014 rules: when a damage die shows a 1 or 2, reroll it and keep the new result, even if it's another 1 or 2.\n2024 rules: treat any 1 or 2 on a damage die as a 3."},"lucky":{"name":"Lucky","tag":"Feat","text":"2014 rules: you have 3 luck points, regained on a long rest. When you make an attack roll, ability check or saving throw, spend a point to roll an extra d20 and pick which die counts. You can also spend one when you're attacked, rolling a d20 and choosing whether the attacker uses that roll or theirs.\n\n2024 rules: your luck points equal your proficiency bonus, regained on a long rest. Spend one to gain advantage on a d20 test, or to give an attacker disadvantage on an attack roll against you."},"savageattacker":{"name":"Savage Attacker","tag":"Feat","text":"Once per turn, when you hit with a weapon, roll the weapon's damage dice twice and use whichever total you like.\n\n2014 wording: applies to melee weapon attacks; you reroll the damage dice and can use either roll."},"greatsword":{"name":"Greatsword","tag":"Martial melee weapon","aka":["greatswor"],"text":"Damage 2d6 slashing. Heavy, two-handed. 6 lb.\n\nAttack bonus: Strength modifier + proficiency bonus.\n\nWeapon mastery (2024): Graze. If your attack misses, the target still takes damage equal to the ability modifier you used for the attack, of the weapon's damage type. This damage can't be increased."},"javelin":{"name":"Javelin","tag":"Simple melee weapon","text":"Damage 1d6 piercing. Thrown (range 30/120 ft). 2 lb.\n\nUses Strength for attack and damage, even when thrown.\n\nWeapon mastery (2024): Slow. When you hit and deal damage, the target's speed drops by 10 feet until the start of your next turn. Hitting it again doesn't lower it further."},"spear":{"name":"Spear","tag":"Simple melee weapon","text":"Damage 1d6 piercing, or 1d8 when held in two hands (versatile). Thrown (range 20/60 ft). 3 lb.\n\nWeapon mastery (2024): Sap. A creature you hit has disadvantage on its next attack roll before the start of your next turn."},"flail":{"name":"Flail","tag":"Martial melee weapon","text":"Damage 1d8 bludgeoning. 2 lb.\n\nWeapon mastery (2024): Sap. A creature you hit has disadvantage on its next attack roll before the start of your next turn."},"dagger":{"name":"Dagger","tag":"Simple melee weapon","text":"Damage 1d4 piercing. Finesse, light, thrown (range 20/60 ft). 1 lb.\n\nWeapon mastery (2024): Nick. When you make the extra attack from the light property, you make it as part of the Attack action instead of with a bonus action (once per turn)."},"chainmail":{"name":"Chain mail","tag":"Heavy armor","aka":["chainmailarmor"],"text":"Armor Class 16 (Dexterity doesn't add). Needs Strength 13, or your speed drops by 10 feet. Disadvantage on Dexterity (Stealth) checks. 55 lb."},"healerskit":{"name":"Healer's kit","tag":"Adventuring gear","aka":["healerkit","healerskit"],"text":"Ten uses. As an action (2024: Utilize action), spend one use to stabilize a creature at 0 hit points without making a Wisdom (Medicine) check."},"dungeoneerspack":{"name":"Dungeoneer's pack","tag":"Equipment pack","aka":["dungoneersbackpack","dungeoneersbackpack","dungoneerspack"],"text":"Contains a backpack, a crowbar, a hammer, 10 pitons, 10 torches, a tinderbox, 10 days of rations and a waterskin, plus 50 feet of hempen rope strapped to the side."},"quiver":{"name":"Quiver","tag":"Adventuring gear","text":"Holds up to 20 arrows (or bolts in some editions), keeping them at hand for drawing."},"smithstools":{"name":"Smith's tools","tag":"Artisan's tools","aka":["smithtools"],"text":"Proficiency lets you add your proficiency bonus to checks for working, repairing or identifying metal items, such as mending armor, forcing open metal fittings or judging the quality of a blade."},"diceset":{"name":"Dice set","tag":"Gaming set","aka":["gamingset","gamingsetdice","dice"],"text":"Proficiency lets you add your proficiency bonus to checks to play games of dice, and to spot someone cheating at them."},"giant":{"name":"Giant","tag":"Language","aka":["giantlanguage"],"text":"Spoken by giants and ogres. Written with the Dwarvish script."},"common":{"name":"Common","tag":"Language","aka":["commonlanguage"],"text":"The widely spoken trade language of most lands. Written with the Common script."},"slow":{"name":"Slow","tag":"Weapon mastery (2024)","text":"When you hit a creature and deal damage, its speed is reduced by 10 feet until the start of your next turn. Multiple hits don't reduce it beyond 10 feet."},"sap":{"name":"Sap","tag":"Weapon mastery (2024)","text":"A creature you hit has disadvantage on its next attack roll before the start of your next turn."},"graze":{"name":"Graze","tag":"Weapon mastery (2024)","text":"If your attack misses, the target still takes damage equal to the ability modifier you used for the attack. The damage can't be increased."},"longsword":{"name":"Longsword","tag":"Martial melee weapon","text":"Damage 1d8 slashing, or 1d10 when held in two hands (versatile). 3 lb.\n\nWeapon mastery (2024): Sap. A creature you hit has disadvantage on its next attack roll before the start of your next turn."},"shield":{"name":"Shield","tag":"Shield","text":"While holding a shield, your Armor Class increases by 2. You can't use a two-handed weapon while holding it. 6 lb."},"darkvision":{"name":"Darkvision","tag":"Trait","text":"You can see in dim light within range as if it were bright light, and in darkness as if it were dim light. You see only shades of gray in darkness."},"frightened":{"name":"Frightened","tag":"Condition","text":"Disadvantage on ability checks and attack rolls while the source of fear is within line of sight.\n\nThe creature can't willingly move closer to the source of its fear."},"prone":{"name":"Prone","tag":"Condition","text":"The creature can only crawl, or spend half its speed to stand up.\n\nDisadvantage on its attack rolls. Attacks against it have advantage within 5 feet, and disadvantage from farther away."},"concentration":{"name":"Concentration","tag":"Spellcasting rule","text":"You can concentrate on only one spell at a time; casting another concentration spell ends the first.\n\nWhen you take damage, make a Constitution save to keep concentrating: DC 10 or half the damage taken, whichever is higher (max 30). Concentration also ends if you are incapacitated or die."}}}</script><script id="app">
+
+@media (max-width:820px){.cols{grid-template-columns:minmax(0,1fr)}.abil{grid-template-columns:repeat(3,1fr)}}
+</style></head><body>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">Paladin 3 · Oath of Conquest · D&amp;D 2024 rules</div>
+as  <h1>Kavrex Thorundar</h1>
+  <div class="sub">Red Dragonborn · Noble background · Lawful Neutral</div>
+  <div class="tags">
+    <span class="tag"><button class="rl" data-r="darkvision">Darkvision 60 ft</button></span><span class="tag"><button class="rl" data-r="ancestry">Fire resistance</button></span>
+    <span class="tag">Languages: Common, Draconic, Dwarvish</span><span class="tag">Hit Dice 3d10</span>
+  </div>
+</header>
+
+<p class="note">Oath of Conquest wasn't reprinted in the 2024 Player's Handbook. This build runs the Xanathar's Guide version on the 2024 paladin class, which the 2024 rules allow for older subclasses. Everything else (species, background, feats, spells, weapon mastery) uses 2024 rules.</p>
+
+<div class="strip">
+  <div class="stat"><span>Armor Class</span><b>16</b><small><button class="rl" data-r="chainmail">Chain mail</button> · 18 with <button class="rl" data-r="shield">shield</button></small></div>
+  <div class="stat"><span>Hit Points</span><b>28</b><small>10 + 2×6, +2 Con per level</small></div>
+  <div class="stat"><span>Initiative</span><b>+0</b><small>Dex 10</small></div>
+  <div class="stat"><span>Speed</span><b>30 ft</b><small>Medium</small></div>
+  <div class="stat"><span>Proficiency</span><b>+2</b><small>Level 3</small></div>
+  <div class="stat"><span>Spell Save DC</span><b>13</b><small>Spell attack +5</small></div>
+</div>
+
+<div class="abil">
+  <div class="ab key"><div class="n">STR</div><div class="m">+3</div><div class="s">16</div></div>
+  <div class="ab"><div class="n">DEX</div><div class="m">+0</div><div class="s">10</div></div>
+  <div class="ab"><div class="n">CON</div><div class="m">+2</div><div class="s">14</div></div>
+  <div class="ab"><div class="n">INT</div><div class="m">−1</div><div class="s">8</div></div>
+  <div class="ab"><div class="n">WIS</div><div class="m">+0</div><div class="s">10</div></div>
+  <div class="ab key"><div class="n">CHA</div><div class="m">+3</div><div class="s">16</div></div>
+</div>
+<p class="note" style="margin-top:-10px">Point buy (27): Str 14, Dex 10, Con 14, Int 8, Wis 10, Cha 15. Noble background adds +2 Str and +1 Cha.</p>
+
+<div class="cols">
+<div class="col">
+
+<section>
+  <h2>Tracker</h2>
+  <div class="track" id="track">
+    <div class="tr"><h3><button class="rl" data-r="slots">1st-level slots</button></h3><div class="pips" data-key="slots" data-n="3"></div></div>
+    <div class="tr"><h3><button class="rl" data-r="channel">Channel Divinity</button></h3><div class="pips" data-key="cd" data-n="2"></div></div>
+    <div class="tr"><h3><button class="rl" data-r="breath">Breath Weapon</button></h3><div class="pips" data-key="breath" data-n="2"></div></div>
+    <div class="tr"><h3><button class="rl" data-r="palsmite">Free Divine Smite</button></h3><div class="pips" data-key="smite" data-n="1"></div></div>
+    <div class="tr"><h3><button class="rl" data-r="loh">Lay on Hands pool</button></h3><div class="loh"><input id="loh" type="number" min="0" max="15" value="15" aria-label="Lay on Hands points left"><span class="sub">/ 15</span></div></div>
+    <div class="tr"><span class="sub" style="font-size:.85rem">Filled = used. Saved in this browser only.</span>
+      <span style="display:flex;gap:8px"><button class="btn" id="sr">Short rest</button><button class="btn" id="lr">Long rest</button></span></div>
+  </div>
+</section>
+
+<section>
+  <h2>Saving Throws</h2>
+  <div class="rows">
+    <div class="row"><span class="k">Strength</span><span class="v">+3</span></div>
+    <div class="row"><span class="k">Dexterity</span><span class="v">+0</span></div>
+    <div class="row"><span class="k">Constitution</span><span class="v">+2</span></div>
+    <div class="row"><span class="k">Intelligence</span><span class="v">−1</span></div>
+    <div class="row p"><span class="k">Wisdom</span><span class="v">+2</span></div>
+    <div class="row p"><span class="k">Charisma</span><span class="v">+5</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>Skills</h2>
+  <div class="rows">
+    <div class="row p"><span class="k">Athletics <small class="sub">(Str)</small></span><span class="v">+5</span></div>
+    <div class="row p"><span class="k">Intimidation <small class="sub">(Cha)</small></span><span class="v">+5</span></div>
+    <div class="row p"><span class="k">Persuasion <small class="sub">(Cha)</small></span><span class="v">+5</span></div>
+    <div class="row p"><span class="k">Insight <small class="sub">(Wis)</small></span><span class="v">+2</span></div>
+    <div class="row p"><span class="k">Perception <small class="sub">(Wis)</small></span><span class="v">+2</span></div>
+    <div class="row p"><span class="k">History <small class="sub">(Int)</small></span><span class="v">+1</span></div>
+    <div class="row p"><span class="k">Religion <small class="sub">(Int)</small></span><span class="v">+1</span></div>
+    <div class="row"><span class="k">Passive Perception</span><span class="v">12</span></div>
+  </div>
+  <p class="sub" style="font-size:.88rem;margin:8px 0 0">Paladin: Athletics, Intimidation · Noble: History, Persuasion · <button class="rl" data-r="skilled">Skilled</button> feat: Insight, Perception, Religion. Tool: <button class="rl" data-r="dragonchess">dragonchess set</button>.</p>
+</section>
+
+<section>
+  <h2>Equipment</h2>
+  <ul class="plain">
+    <li><button class="rl" data-r="greatsword">Greatsword</button> (bought, 50 GP)</li>
+    <li><button class="rl" data-r="chainmail">Chain mail</button>, <button class="rl" data-r="shield">shield</button>, <button class="rl" data-r="longsword">longsword</button></li>
+    <li>6 <button class="rl" data-r="javelin">javelins</button></li>
+    <li><button class="rl" data-r="holysymbol">Holy symbol</button> (an iron signet bearing a clawed fist)</li>
+    <li><button class="rl" data-r="priestspack">Priest's pack</button>, <button class="rl" data-r="dragonchess">dragonchess set</button></li>
+    <li>9 GP</li>
+  </ul>
+  <p class="sub" style="font-size:.88rem;margin:8px 0 0">Paladin option A plus Noble option B (50 GP), then the greatsword purchase.</p>
+</section>
+
+</div>
+<div class="col">
+
+<section>
+  <h2>Attacks</h2>
+  <p class="hint">Tap any underlined name on the sheet to see its full rules.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Weapon</th><th>Hit</th><th>Damage</th><th>Mastery / notes</th></tr></thead>
+    <tbody>
+      <tr><td><button class="rl" data-r="greatsword">Greatsword</button></td><td class="n">+5</td><td class="n">2d6+3 slashing</td><td><b><button class="rl" data-r="graze">Graze</button></b>: on a miss, still deal 3 damage. <button class="rl" data-r="gwf">Great Weapon Fighting</button>: damage dice of 1–2 count as 3.</td></tr>
+      <tr><td><button class="rl" data-r="javelin">Javelin</button></td><td class="n">+5</td><td class="n">1d6+3 piercing</td><td><b><button class="rl" data-r="slow">Slow</button></b>: target loses 10 ft of speed. Thrown 30/120 ft.</td></tr>
+      <tr><td><button class="rl" data-r="longsword">Longsword</button> + shield</td><td class="n">+5</td><td class="n">1d8+3 slashing</td><td>Backup loadout for AC 18. No mastery unless swapped in on a long rest (<button class="rl" data-r="sap">Sap</button>).</td></tr>
+      <tr><td><button class="rl" data-r="breath">Breath Weapon</button></td><td class="n">DC 12</td><td class="n">1d10 fire</td><td>Replaces one attack. 15 ft cone or 30 ft line, Dex save for half. 2 uses per long rest.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Oath of Conquest</h2>
+  <div class="oath">
+    <h3>Tenets</h3>
+    <ul>
+      <li><b>Douse the Flame of Hope.</b> Defeat enemies so completely that their will to fight is broken for good.</li>
+      <li><b>Rule with an Iron Fist.</b> Once you conquer, tolerate no dissent. Your word is law.</li>
+      <li><b>Strength Above All.</b> You rule until a stronger one arises. Then grow mightier and meet the challenge.</li>
+    </ul>
+  </div>
+  <div class="feat"><h3><button class="rl" data-r="conqpres">Conquering Presence</button> <span class="src">Channel Divinity · action</span></h3>
+    <p>Each creature you choose within 30 ft makes a DC 13 Wisdom save or is <button class="rl" data-r="frightened">Frightened</button> of you for 1 minute. It repeats the save at the end of each of its turns.</p></div>
+  <div class="feat"><h3><button class="rl" data-r="guided">Guided Strike</button> <span class="src">Channel Divinity · no action</span></h3>
+    <p>After seeing an attack roll, but before the DM says hit or miss, add +10 to it.</p></div>
+  <div class="feat"><h3><button class="rl" data-r="oathspells">Oath Spells</button> <span class="src">Always prepared</span></h3>
+    <p><button class="rl" data-r="aoa">Armor of Agathys</button> and <button class="rl" data-r="command">Command</button> at level 3. <button class="rl" data-r="holdperson">Hold Person</button> and <button class="rl" data-r="spiritualweapon">Spiritual Weapon</button> join at 5.</p></div>
+</section>
+
+<section>
+  <h2>Class &amp; Species Features</h2>
+  <div class="feat"><h3><button class="rl" data-r="loh">Lay on Hands</button> <span class="src">Paladin 1 · bonus action</span></h3>
+    <p>Pool of 15 HP. Touch a creature to restore any amount, or spend 5 points to end the Poisoned condition.</p></div>
+  <div class="feat"><h3><button class="rl" data-r="mastery">Weapon Mastery</button> <span class="src">Paladin 1</span></h3>
+    <p>Greatsword (<button class="rl" data-r="graze">Graze</button>) and Javelin (<button class="rl" data-r="slow">Slow</button>). Swap one choice after a long rest.</p></div>
+  <div class="feat"><h3><button class="rl" data-r="gwf">Fighting Style: Great Weapon Fighting</button> <span class="src">Paladin 2</span></h3>
+    <p>When rolling damage for a two-handed or versatile melee weapon held in two hands, treat any 1 or 2 as a 3.</p></div>
+  <div class="feat"><h3><button class="rl" data-r="palsmite">Paladin's Smite</button> <span class="src">Paladin 2</span></h3>
+    <p><button class="rl" data-r="smite">Divine Smite</button> is always prepared, and you can cast it once per long rest without a spell slot.</p></div>
+  <div class="feat"><h3><button class="rl" data-r="channel">Channel Divinity</button> <span class="src">Paladin 3 · 2 uses</span></h3>
+    <p>Regain one use on a short rest, all on a long rest. Options: <button class="rl" data-r="divinesense">Divine Sense</button>, <button class="rl" data-r="conqpres">Conquering Presence</button>, <button class="rl" data-r="guided">Guided Strike</button>.</p></div>
+  <div class="feat"><h3><button class="rl" data-r="ancestry">Draconic Ancestry: Red</button> <span class="src">Dragonborn</span></h3>
+    <p><button class="rl" data-r="breath">Breath Weapon</button> deals fire damage, and you resist fire damage. <button class="rl" data-r="darkvision">Darkvision</button> 60 ft.</p></div>
+  <div class="feat"><h3><button class="rl" data-r="skilled">Skilled</button> <span class="src">Origin feat · Noble</span></h3>
+    <p>Three extra skill proficiencies: Insight, Perception, Religion.</p></div>
+</section>
+
+<section>
+  <h2>Spells</h2>
+  <p class="sub" style="margin:0 0 4px;font-size:.92rem">3 first-level slots · 4 prepared, plus oath spells and Divine Smite. Most smites are now bonus actions, so you get one smite per turn.</p>
+  <div class="spell"><h3><button class="rl" data-r="smite">Divine Smite</button> <span class="src">Always · bonus action</span></h3><p>After a hit: +2d8 radiant, +1d8 per slot above 1st, +1d8 more against fiends and undead.</p></div>
+  <div class="spell"><h3><button class="rl" data-r="command">Command</button> <span class="src">Oath</span></h3><p>Wis save. "Flee" or "Grovel" fits the theme. Upcast for more targets.</p></div>
+  <div class="spell"><h3><button class="rl" data-r="aoa">Armor of Agathys</button> <span class="src">Oath · bonus action</span></h3><p>5 temp HP; melee attackers take 5 cold damage while the temp HP lasts.</p></div>
+  <div class="spell"><h3><button class="rl" data-r="wrathful">Wrathful Smite</button> <span class="src">Prepared · bonus action</span></h3><p>After a hit: +1d6 necrotic and the target makes a Wis save or is Frightened for 1 minute.</p></div>
+  <div class="spell"><h3><button class="rl" data-r="bless">Bless</button> <span class="src">Prepared · concentration</span></h3><p>Up to 3 creatures add 1d4 to attack rolls and saves.</p></div>
+  <div class="spell"><h3><button class="rl" data-r="sof">Shield of Faith</button> <span class="src">Prepared · bonus action, conc.</span></h3><p>+2 AC to one creature for 10 minutes.</p></div>
+  <div class="spell"><h3><button class="rl" data-r="duel">Compelled Duel</button> <span class="src">Prepared · bonus action, conc.</span></h3><p>Wis save, or the target has Disadvantage attacking anyone but you.</p></div>
+</section>
+
+<section>
+  <h2>How to Play Him</h2>
+  <div class="prose">
+    <p><b>Open with fear.</b> Use <button class="rl" data-r="conqpres">Conquering Presence</button> on a group. <button class="rl" data-r="frightened">Frightened</button> enemies have Disadvantage on attacks and ability checks while they can see you, and can't willingly move closer to you.</p>
+    <p><b>Keep it going.</b> <button class="rl" data-r="wrathful">Wrathful Smite</button> frightens anyone who resisted. <button class="rl" data-r="command">Command</button> "Grovel" knocks a target <button class="rl" data-r="prone">prone</button> for your allies. At level 7, <button class="rl" data-r="auraconq">Aura of Conquest</button> drops frightened foes near you to 0 speed and deals psychic damage each turn.</p>
+    <p><b>Save <button class="rl" data-r="guided">Guided Strike</button></b> for the hit that matters most, like a Divine Smite on a boss. Watch your bonus action: smites, Lay on Hands and Shield of Faith all compete for it.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Character</h2>
+  <div class="prose">
+    <p>Kavrex is the last heir of House Thorundar, a dragonborn clan that once ruled a mountain march before rivals broke it apart. He swore his oath on the ruins of the family keep: order will be restored, by force if necessary, and anyone who preys on the weak will learn what it is to be ruled.</p>
+    <p><b>Trait:</b> Speaks little, and never raises his voice. <b>Ideal:</b> Order is mercy; chaos kills more than any tyrant. <b>Bond:</b> He carries his grandmother's iron signet and means to reclaim the seat it belongs to. <b>Flaw:</b> He sees any challenge to his authority as a challenge to fight.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Level Plan</h2>
+  <div class="lvl"><div class="L">4</div><p><b><button class="rl" data-r="gwm">Great Weapon Master</button></b> (Str 17). Once per turn, add your proficiency bonus to heavy weapon damage, plus a bonus-action attack after a crit or kill. Alternatively take +2 Str.</p></div>
+  <div class="lvl"><div class="L">5</div><p><b><button class="rl" data-r="extraattack">Extra Attack</button></b>, 2nd-level slots, <button class="rl" data-r="steed">Faithful Steed</button>, Hold Person and Spiritual Weapon. Breath Weapon rises to 2d10 and you gain <button class="rl" data-r="flight">Draconic Flight</button>.</p></div>
+  <div class="lvl"><div class="L">6</div><p><b><button class="rl" data-r="auraprot">Aura of Protection</button></b>: you and allies within 10 ft add +3 (your Cha) to saving throws.</p></div>
+  <div class="lvl"><div class="L">7</div><p><b><button class="rl" data-r="auraconq">Aura of Conquest</button></b>: frightened creatures within 10 ft have speed 0 and take psychic damage equal to half your paladin level when they start their turn there.</p></div>
+  <div class="lvl"><div class="L">8</div><p>Ability Score Improvement: +1 Str, +1 Cha (Str 18, Cha 17), or a feat like Sentinel.</p></div>
+  <div class="lvl"><div class="L">9</div><p><b><button class="rl" data-r="abjure">Abjure Foes</button></b> adds a second way to frighten with Channel Divinity. Bestow Curse and Fear join your oath spells.</p></div>
+  <div class="lvl"><div class="L">15</div><p><b><button class="rl" data-r="scornful">Scornful Rebuke</button></b>: anything that hits you takes psychic damage equal to your Cha modifier.</p></div>
+  <div class="lvl"><div class="L">20</div><p><b><button class="rl" data-r="invincible">Invincible Conqueror</button></b>: for 1 minute, resistance to all damage, an extra attack, and crits on 19–20.</p></div>
+</section>
+
+</div>
+</div>
+</div>
+
+<script>
 (function(){
 "use strict";
-const HEAD_LINKS='<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:wght@500;700;800&family=Alegreya+SC:wght@500;700&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap">';
-const KEY='charsheet-blank-draft-v1';
-let S=JSON.parse(document.getElementById('state').textContent);
-const BASE=S.savedAt||0;
-let dirty=false,saving=false,RO=false,ART=null,SAMPLE=null,saveMsg='';
-try{const d=JSON.parse(localStorage.getItem(KEY)||'null');if(d&&d.base===BASE&&d.state){S=d.state;dirty=true}}catch(e){}
 
-const ABIL=[['str','Strength'],['dex','Dexterity'],['con','Constitution'],['int','Intelligence'],['wis','Wisdom'],['cha','Charisma']];
-const SHORT={str:'Str',dex:'Dex',con:'Con',int:'Int',wis:'Wis',cha:'Cha'};
-const SKILLS=[['acrobatics','Acrobatics','dex'],['animal','Animal Handling','wis'],['arcana','Arcana','int'],['athletics','Athletics','str'],['deception','Deception','cha'],['history','History','int'],['insight','Insight','wis'],['intimidation','Intimidation','cha'],['investigation','Investigation','int'],['medicine','Medicine','wis'],['nature','Nature','int'],['perception','Perception','wis'],['performance','Performance','cha'],['persuasion','Persuasion','cha'],['religion','Religion','int'],['sleight','Sleight of Hand','dex'],['stealth','Stealth','dex'],['survival','Survival','wis']];
-const KINDS={attacks:{add:'Add attack'},features:{add:'Add feature or trait'},prof:{add:'Add proficiency or language'},equip:{add:'Add item'},spell:{add:'Add spell'}};
+/* Rules library. Text: blank line = new paragraph, [[key|label]] links to another card.
+   trk ties a card to a tracker resource so it shows what's left. */
+var LIB={
+ greatsword:{name:"Greatsword",tag:"Martial melee weapon",chips:[["Hit","+5"],["Damage","2d6+3 slashing"]],
+  text:"Heavy, two-handed. 6 lb.\n\nAttack bonus: Strength modifier (+3) + proficiency bonus (+2).\n\nWeapon mastery: [[graze|Graze]]. If your attack misses, the target still takes 3 slashing damage.\n\nWith [[gwf|Great Weapon Fighting]], any 1 or 2 on the damage dice counts as a 3, so the minimum hit is 9 damage."},
+ javelin:{name:"Javelin",tag:"Simple melee weapon",chips:[["Hit","+5"],["Damage","1d6+3 piercing"],["Range","30/120 ft"]],
+  text:"Thrown (range 30/120 ft). 2 lb. Uses Strength for attack and damage, even when thrown.\n\nWeapon mastery: [[slow|Slow]]. When you hit and deal damage, the target's speed drops by 10 feet until the start of your next turn.\n\nYou carry 6. Recover thrown javelins after the fight."},
+ longsword:{name:"Longsword",tag:"Martial melee weapon",chips:[["Hit","+5"],["Damage","1d8+3 slashing"]],
+  text:"Versatile: 1d10 slashing when held in two hands. 3 lb.\n\nUsed one-handed with your [[shield|shield]] for AC 18.\n\nWeapon mastery: [[sap|Sap]]. You only get it if you swap Sap in for one of your mastery choices after a long rest."},
+ breath:{name:"Breath Weapon",tag:"Dragonborn trait · red (fire)",trk:"breath",chips:[["Save","DC 12 Dex"],["Damage","1d10 fire"]],
+  text:"When you take the Attack action on your turn, you can replace one of your attacks with an exhalation of fire in a 15-foot cone or a 30-foot line that is 5 feet wide (choose each time).\n\nEach creature in the area makes a Dexterity saving throw (DC 8 + Con modifier + proficiency bonus = 12). On a failed save it takes 1d10 fire damage, or half as much on a success.\n\nDamage rises to 2d10 at character level 5, 3d10 at 11 and 4d10 at 17.\n\nUses equal to your proficiency bonus (2), all regained on a long rest."},
+ graze:{name:"Graze",tag:"Weapon mastery",
+  text:"If your attack roll with this weapon misses a creature, you can deal damage to it equal to the ability modifier you used for the attack (+3 for you). The damage is the same type the weapon deals, and it can't be increased in any way other than raising that ability modifier."},
+ slow:{name:"Slow",tag:"Weapon mastery",
+  text:"If you hit a creature with this weapon and deal damage to it, you can reduce its speed by 10 feet until the start of your next turn. Hitting it more than once doesn't reduce its speed by more than 10 feet."},
+ sap:{name:"Sap",tag:"Weapon mastery",
+  text:"If you hit a creature with this weapon, that creature has Disadvantage on its next attack roll before the start of your next turn."},
+ mastery:{name:"Weapon Mastery",tag:"Paladin level 1",
+  text:"You can use the mastery properties of two kinds of weapons you're proficient with: currently the greatsword ([[graze|Graze]]) and the javelin ([[slow|Slow]]).\n\nWhenever you finish a long rest, you can change one of those choices, for example to the longsword ([[sap|Sap]])."},
+ gwf:{name:"Great Weapon Fighting",tag:"Fighting style · paladin level 2",
+  text:"When you roll damage for an attack you make with a melee weapon that you are holding with two hands, you can treat any 1 or 2 on a damage die as a 3. The weapon must have the Two-Handed or Versatile property.\n\nThis applies to the weapon's dice and to extra dice added on that hit, such as [[smite|Divine Smite]]."},
+ conqpres:{name:"Conquering Presence",tag:"Oath of Conquest · Channel Divinity",trk:"cd",chips:[["Action","Action"],["Save","DC 13 Wis"],["Range","30 ft"]],
+  text:"As an action, you exude a terrifying presence. Each creature of your choice that you can see within 30 feet of you must make a Wisdom saving throw or become [[frightened|Frightened]] of you for 1 minute.\n\nA frightened creature can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success.\n\nCombine with [[auraconq|Aura of Conquest]] from level 7 to pin frightened enemies in place."},
+ guided:{name:"Guided Strike",tag:"Oath of Conquest · Channel Divinity",trk:"cd",chips:[["Action","None"],["Bonus","+10 to hit"]],
+  text:"When you make an attack roll, you can use your Channel Divinity to gain a +10 bonus to the roll.\n\nYou make this choice after you see the roll, but before the DM says whether the attack hits or misses."},
+ divinesense:{name:"Divine Sense",tag:"Paladin · Channel Divinity",trk:"cd",chips:[["Action","Bonus action"],["Range","60 ft"],["Duration","10 min"]],
+  text:"As a bonus action, you open your awareness to detect celestials, fiends and undead. For the next 10 minutes, or until you have the Incapacitated condition, you know the location of any creature of those types within 60 feet of you, and you know its creature type.\n\nWithin the same radius, you also detect the presence of any place or object that has been consecrated or desecrated."},
+ channel:{name:"Channel Divinity",tag:"Paladin level 3",trk:"cd",
+  text:"You can channel divine energy directly from the Outer Planes to fuel magical effects. You have 2 uses.\n\nYou regain one expended use when you finish a short rest, and all of them when you finish a long rest.\n\nYour options:\n• [[divinesense|Divine Sense]]\n• [[conqpres|Conquering Presence]]\n• [[guided|Guided Strike]]\n\nAt paladin level 9 you add [[abjure|Abjure Foes]], and at 11 you get a third use."},
+ oathspells:{name:"Oath Spells",tag:"Oath of Conquest",
+  text:"These spells are always prepared and don't count against the number of spells you can prepare.\n\nPaladin level 3: [[aoa|Armor of Agathys]], [[command|Command]]\nPaladin level 5: [[holdperson|Hold Person]], [[spiritualweapon|Spiritual Weapon]]\nPaladin level 9: Bestow Curse, Fear\nPaladin level 13: Dominate Beast, Stoneskin\nPaladin level 17: Cloudkill, Dominate Person"},
+ loh:{name:"Lay on Hands",tag:"Paladin level 1",trk:"loh",chips:[["Action","Bonus action"],["Range","Touch"]],
+  text:"You have a pool of healing power equal to 5 × your paladin level (15). It refills when you finish a long rest.\n\nAs a bonus action, touch a creature (it can be you) and draw power from the pool to restore any number of hit points, up to what's left in the pool.\n\nYou can also spend 5 points from the pool to remove the Poisoned condition from the creature; those points don't also restore hit points."},
+ palsmite:{name:"Paladin's Smite",tag:"Paladin level 2",trk:"smite",
+  text:"You always have the [[smite|Divine Smite]] spell prepared.\n\nIn addition, you can cast it without expending a spell slot, but once you do so, you can't cast it this way again until you finish a long rest."},
+ smite:{name:"Divine Smite",tag:"1st-level evocation · always prepared",trk:"slots",chips:[["Action","Bonus action"],["Damage","2d8 radiant"]],
+  text:"Cast as a bonus action immediately after you hit a target with a melee weapon or an unarmed strike.\n\nThe target takes an extra 2d8 radiant damage from the attack. The damage increases by 1d8 if the target is a fiend or undead.\n\nUsing a higher-level slot: +1d8 for each slot level above 1st.\n\nBecause it's a spell cast with a bonus action, you can only smite once per turn. One free cast per long rest from [[palsmite|Paladin's Smite]]."},
+ command:{name:"Command",tag:"1st-level enchantment · oath spell",trk:"slots",chips:[["Action","Action"],["Range","60 ft"],["Save","DC 13 Wis"],["Duration","1 round"]],
+  text:"You speak a one-word command to a creature you can see within range. It must succeed on a Wisdom saving throw or follow the command on its next turn.\n\nApproach: it moves toward you by the shortest route, ending its turn within 5 feet of you if it can.\nDrop: it drops whatever it is holding and ends its turn.\nFlee: it spends its turn moving away from you by the fastest means available.\nGrovel: it falls [[prone|Prone]] and ends its turn.\nHalt: it doesn't move and takes no action or bonus action.\n\nUsing a higher-level slot: one additional creature for each slot level above 1st."},
+ aoa:{name:"Armor of Agathys",tag:"1st-level abjuration · oath spell",trk:"slots",chips:[["Action","Bonus action"],["Duration","1 hour"]],
+  text:"Protective magical frost surrounds you. You gain 5 temporary hit points. If a creature hits you with a melee attack roll before the spell ends, that creature takes 5 cold damage.\n\nThe spell ends early if you have no temporary hit points left.\n\nUsing a higher-level slot: temporary hit points and cold damage both increase by 5 for each slot level above 1st.\n\nCast it before a fight if you can; it doesn't need concentration."},
+ wrathful:{name:"Wrathful Smite",tag:"1st-level necromancy · prepared",trk:"slots",chips:[["Action","Bonus action"],["Save","DC 13 Wis"],["Damage","1d6 necrotic"]],
+  text:"Cast as a bonus action immediately after you hit a target with a melee weapon or an unarmed strike.\n\nThe target takes an extra 1d6 necrotic damage, and it must succeed on a Wisdom saving throw or have the [[frightened|Frightened]] condition until the spell ends (1 minute). At the end of each of its turns, the frightened target repeats the save, ending the spell on itself on a success.\n\nUsing a higher-level slot: +1d6 damage for each slot level above 1st."},
+ bless:{name:"Bless",tag:"1st-level enchantment · prepared",trk:"slots",chips:[["Action","Action"],["Range","30 ft"],["Duration","Conc. 1 min"]],
+  text:"You bless up to three creatures within range. Whenever a target makes an attack roll or a saving throw before the spell ends, it adds 1d4 to the roll.\n\nUsing a higher-level slot: one additional target for each slot level above 1st.\n\nNeeds [[concentration|concentration]]."},
+ sof:{name:"Shield of Faith",tag:"1st-level abjuration · prepared",trk:"slots",chips:[["Action","Bonus action"],["Range","60 ft"],["Duration","Conc. 10 min"]],
+  text:"A shimmering field surrounds a creature of your choice within range, granting it a +2 bonus to Armor Class for the duration.\n\nNeeds [[concentration|concentration]]."},
+ duel:{name:"Compelled Duel",tag:"1st-level enchantment · prepared",trk:"slots",chips:[["Action","Bonus action"],["Range","30 ft"],["Save","DC 13 Wis"],["Duration","Conc. 1 min"]],
+  text:"You try to compel a creature into a duel. One creature you can see within range makes a Wisdom saving throw. On a failed save, it has Disadvantage on attack rolls against creatures other than you, and it can't willingly move to a space that is more than 30 feet away from you.\n\nThe spell ends if you make an attack roll against a creature other than the target, if you cast a spell on an enemy other than the target, if an ally of yours damages the target, or if you end your turn more than 30 feet away from the target.\n\nNeeds [[concentration|concentration]]."},
+ holdperson:{name:"Hold Person",tag:"2nd-level enchantment · oath spell (level 5)",chips:[["Action","Action"],["Range","60 ft"],["Duration","Conc. 1 min"]],
+  text:"Choose a Humanoid you can see within range. It must succeed on a Wisdom saving throw or have the Paralyzed condition for the duration. At the end of each of its turns, it repeats the save, ending the spell on itself on a success.\n\nAttacks from within 5 feet against a paralyzed creature are automatic critical hits, which doubles your smite dice.\n\nUsing a higher-level slot: one additional Humanoid for each slot level above 2nd."},
+ spiritualweapon:{name:"Spiritual Weapon",tag:"2nd-level evocation · oath spell (level 5)",chips:[["Action","Bonus action"],["Range","60 ft"],["Duration","Conc. 1 min"]],
+  text:"You create a floating spectral force that resembles a weapon of your choice within range. When you cast it, you can make a melee spell attack against a creature within 5 feet of the force. On a hit, the target takes force damage equal to 1d8 + your Charisma modifier.\n\nAs a bonus action on later turns, you can move the force up to 20 feet and repeat the attack.\n\nUsing a higher-level slot: +1d8 damage for each slot level above 2nd."},
+ ancestry:{name:"Draconic Ancestry: Red",tag:"Dragonborn trait",
+  text:"Your lineage stems from a red dragon, which sets the damage type for your traits: fire.\n\nDamage resistance: you have resistance to fire damage, so it is halved.\n\nYour [[breath|Breath Weapon]] deals fire damage.\n\nOther dragonborn traits: [[darkvision|Darkvision]] 60 ft, and [[flight|Draconic Flight]] from character level 5."},
+ darkvision:{name:"Darkvision",tag:"Dragonborn trait",chips:[["Range","60 ft"]],
+  text:"You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light. You discern colors in that darkness only as shades of gray."},
+ skilled:{name:"Skilled",tag:"Origin feat · Noble background",
+  text:"You gain proficiency in any combination of three skills or tools of your choice. You picked Insight, Perception and Religion.\n\nRepeatable: you can take this feat more than once."},
+ frightened:{name:"Frightened",tag:"Condition",
+  text:"Ability checks and attacks affected: the frightened creature has Disadvantage on ability checks and attack rolls while the source of its fear is within line of sight.\n\nCan't approach: it can't willingly move closer to the source of its fear.\n\nYour tools for this: [[conqpres|Conquering Presence]], [[wrathful|Wrathful Smite]], and later [[auraconq|Aura of Conquest]] and [[abjure|Abjure Foes]]."},
+ prone:{name:"Prone",tag:"Condition",
+  text:"Restricted movement: the creature's only movement options are to crawl or to spend half its speed (rounded down) to stand up, which ends the condition.\n\nAttacks affected: it has Disadvantage on attack rolls. An attack roll against it has Advantage if the attacker is within 5 feet of it; otherwise that attack roll has Disadvantage.\n\n[[command|Command]] \"Grovel\" sets this up for melee allies."},
+ concentration:{name:"Concentration",tag:"Spellcasting rule",
+  text:"Some spells require you to keep concentrating to keep them active. You can concentrate on only one spell at a time; casting another concentration spell ends the first.\n\nIf you take damage, you must succeed on a Constitution saving throw to keep concentrating. The DC is 10 or half the damage taken (round down), whichever is higher, up to a maximum DC of 30.\n\nConcentration also ends if you have the Incapacitated condition or die.\n\nOn this sheet: [[bless|Bless]], [[sof|Shield of Faith]] and [[duel|Compelled Duel]] need it. Your smites and [[aoa|Armor of Agathys]] don't."},
+ slots:{name:"Spell Slots",tag:"Paladin spellcasting",trk:"slots",
+  text:"At paladin level 3 you have three 1st-level slots. Casting a prepared spell expends a slot; you regain all expended slots when you finish a long rest.\n\nSpell save DC 13 (8 + proficiency + Charisma). Spell attack +5.\n\nYour 1st-level spells: [[smite|Divine Smite]], [[command|Command]], [[aoa|Armor of Agathys]], [[wrathful|Wrathful Smite]], [[bless|Bless]], [[sof|Shield of Faith]], [[duel|Compelled Duel]].\n\nAt paladin level 5 you gain 4 first-level and 2 second-level slots."},
+ chainmail:{name:"Chain mail",tag:"Heavy armor",chips:[["AC","16"]],
+  text:"Armor Class 16. Dexterity doesn't add to it.\n\nRequires Strength 13; otherwise your speed drops by 10 feet. You have Str 16, so no penalty.\n\nDisadvantage on Dexterity (Stealth) checks. 55 lb.\n\nTakes 5 minutes to don and 5 minutes to doff."},
+ shield:{name:"Shield",tag:"Shield",chips:[["AC","+2"]],
+  text:"While holding a shield, your Armor Class increases by 2 (AC 18 with chain mail).\n\nYou can don or doff a shield with the Utilize action. You can't wield the [[greatsword|greatsword]] while holding it, so the shield goes with the [[longsword|longsword]] loadout.\n\nIt can also bear your holy symbol, letting it act as your spellcasting focus."},
+ holysymbol:{name:"Holy Symbol",tag:"Spellcasting focus",
+  text:"A holy symbol can be used as a spellcasting focus for your paladin spells. You must hold it, wear it visibly, or bear it on a shield.\n\nKavrex's is an iron signet bearing a clawed fist, the seal of House Thorundar."},
+ priestspack:{name:"Priest's pack",tag:"Equipment pack",
+  text:"Contains a backpack, a blanket, holy water, a lamp, 7 days of rations, a robe and a tinderbox."},
+ dragonchess:{name:"Dragonchess set",tag:"Gaming set · Noble tool proficiency",
+  text:"Proficiency lets you add your proficiency bonus to ability checks you make to play dragonchess.\n\nUseful for impressing nobles, reading an opponent's temperament, or passing time on a long road."},
+ gwm:{name:"Great Weapon Master",tag:"General feat · level 4 option",
+  text:"Ability score increase: +1 Strength (to 17).\n\nHeavy Weapon Mastery: when you hit a creature with a weapon that has the Heavy property as part of the Attack action, you can cause the weapon to deal extra damage equal to your proficiency bonus.\n\nHew: immediately after you score a critical hit with a melee weapon or reduce a creature to 0 hit points with one, you can make one attack with the same weapon as a bonus action."},
+ extraattack:{name:"Extra Attack",tag:"Paladin level 5",
+  text:"You can attack twice instead of once whenever you take the Attack action on your turn.\n\nOne of those attacks can be replaced by your [[breath|Breath Weapon]]."},
+ steed:{name:"Faithful Steed",tag:"Paladin level 5",
+  text:"You always have the Find Steed spell prepared. You can also cast it once without expending a spell slot, and you regain that ability when you finish a long rest."},
+ flight:{name:"Draconic Flight",tag:"Dragonborn trait · character level 5",chips:[["Action","Bonus action"],["Duration","10 min"]],
+  text:"As a bonus action, you sprout spectral wings on your back that last for 10 minutes, or until you retract them (no action required) or have the Incapacitated condition. During that time, you have a fly speed equal to your speed.\n\nYour wings appear to be made of the same energy as your breath weapon: fire.\n\nOnce you use this trait, you can't use it again until you finish a long rest."},
+ auraprot:{name:"Aura of Protection",tag:"Paladin level 6",chips:[["Range","10 ft"]],
+  text:"You radiate a protective, unseeable aura in a 10-foot emanation that originates from you. The aura is inactive while you have the Incapacitated condition.\n\nYou and your allies in the aura gain a bonus to saving throws equal to your Charisma modifier (minimum +1).\n\nIf another paladin is present, a creature can benefit from only one Aura of Protection at a time."},
+ auraconq:{name:"Aura of Conquest",tag:"Oath of Conquest · paladin level 7",chips:[["Range","10 ft"]],
+  text:"You constantly emanate a menacing aura while you're not incapacitated. It extends 10 feet from you in every direction, but not through total cover.\n\nIf a creature is [[frightened|Frightened]] of you, its speed is reduced to 0 while in the aura, and that creature takes psychic damage equal to half your paladin level if it starts its turn there.\n\nAt paladin level 18 the range increases to 30 feet."},
+ abjure:{name:"Abjure Foes",tag:"Paladin level 9 · Channel Divinity",trk:"cd",chips:[["Action","Action"],["Range","60 ft"]],
+  text:"As a Magic action, you expend one use of Channel Divinity to overwhelm foes with awe. Choose a number of creatures equal to your Charisma modifier (minimum 1) that you can see within 60 feet of you.\n\nEach target must succeed on a Wisdom saving throw or have the [[frightened|Frightened]] condition for 1 minute or until it takes any damage. While frightened this way, a target can do only one of the following on its turns: move, take an action, or take a bonus action."},
+ scornful:{name:"Scornful Rebuke",tag:"Oath of Conquest · paladin level 15",
+  text:"Those who dare to strike you are psychically punished for their audacity. Whenever a creature hits you with an attack, that creature takes psychic damage equal to your Charisma modifier (minimum 1) if you're not incapacitated."},
+ invincible:{name:"Invincible Conqueror",tag:"Oath of Conquest · paladin level 20",chips:[["Action","Action"],["Duration","1 min"]],
+  text:"As an action, you can magically become an avatar of conquest, gaining the following benefits for 1 minute:\n\n• You have resistance to all damage.\n• When you take the Attack action on your turn, you can make one additional attack as part of that action.\n• Your melee weapon attacks score a critical hit on a roll of 19 or 20 on the d20.\n\nOnce you use this feature, you can't use it again until you finish a long rest."}
+};
 
-/* helpers */
-function h(tag,a,...kids){const e=document.createElement(tag);if(a)for(const k in a){const v=a[k];if(v==null||v===false)continue;if(k==='class')e.className=v;else if(k.slice(0,2)==='on')e.addEventListener(k.slice(2),v);else e.setAttribute(k,v===true?'':v)}for(const c of kids.flat()){if(c==null||c===false)continue;e.append(c.nodeType?c:document.createTextNode(String(c)))}return e}
-const n=v=>{const x=parseInt(v,10);return isNaN(x)?0:x};
-const sg=x=>(x>=0?'+':'')+x;
-function gp(p){return p.split('.').reduce((o,k)=>o==null?undefined:o[k],S)}
-function sp(p,v){const ks=p.split('.');let o=S;for(let i=0;i<ks.length-1;i++){if(o[ks[i]]==null)o[ks[i]]={};o=o[ks[i]]}o[ks[ks.length-1]]=v;changed()}
-const M=a=>Math.floor((n(S.f[a])-10)/2);
-const P=()=>n(S.f.prof);
-const saveV=a=>M(a)+(S.f.saves&&S.f.saves[a]?P():0);
-const skillV=(k,a)=>M(a)+(S.f.skills&&S.f.skills[k]?P():0);
-const runeDC=()=>8+P()+M('con');
-
-const D={};let dk=0;
-function dv(fn,cls){const k='d'+(dk++);D[k]=fn;return h('span',{'data-d':k,class:cls||null},fn())}
-function derive(){document.querySelectorAll('[data-d]').forEach(e=>{const f=D[e.dataset.d];if(f){const v=String(f());if(e.textContent!==v)e.textContent=v}})}
-
-function inp(path,o){o=o||{};const e=o.area?h('textarea',{rows:o.rows||3,placeholder:o.ph||null,'aria-label':o.label||null}):h('input',{type:'text',inputmode:o.num?'numeric':null,placeholder:o.ph||null,'aria-label':o.label||null,class:o.cls||null});const v=gp(path);e.value=v==null?'':v;e.addEventListener('input',()=>{sp(path,e.value);derive();if(o.after)o.after()});return e}
-function fld(path,label,o){o=o||{};return h('label',{class:'fld '+(o.wrap||'')},inp(path,Object.assign({},o,{label})),h('span',{class:'fl'},label))}
-function box(label,body,cls){return h('section',{class:'box '+(cls||'')},h('div',{class:'body'},body),h('div',{class:'lab'},label))}
-
-function pips(getMax,path,label,cls){const w=h('span',{class:'pips '+(cls||''),role:'group','aria-label':label});function r(){w.textContent='';const max=getMax();let v=n(gp(path));if(v>max)v=max;for(let i=0;i<max;i++){const on=i<v;w.append(h('button',{type:'button',class:'pip'+(on?' on':''),'aria-label':label+' '+(i+1),'aria-pressed':String(on),onclick:()=>{sp(path,v>i?i:i+1);r()}}))}}r();w.rerender=r;return w}
-
-function norm(s){return String(s||'').toLowerCase().replace(/\(.*?\)/g,'').replace(/[x×]\s*\d+|\d+\s*[x×]/g,'').replace(/[^a-z0-9æøåäöüéè]/g,'')}
-function ruleKey(name){const k=norm(name);if(!k)return null;const L=S.lib;if(L[k])return k;if(k.endsWith('s')&&L[k.slice(0,-1)])return k.slice(0,-1);for(const key in L){const aka=L[key].aka||[];if(aka.includes(k)||(k.endsWith('s')&&aka.includes(k.slice(0,-1))))return key}return null}
-const rule=name=>{const k=ruleKey(name);return k?S.lib[k]:null};
-function paras(t){return String(t).split(/\n\s*\n/).map(p=>{const e=h('p');p.split('\n').forEach((l,i)=>{if(i)e.append(h('br'));e.append(l)});return e})}
-const kindOf=key=>key.indexOf('sp.')===0?'spell':key;
-
-/* save state */
-let draftT=null;
-function changed(){dirty=true;updateSaveUI();clearTimeout(draftT);draftT=setTimeout(()=>{try{localStorage.setItem(KEY,JSON.stringify({base:BASE,state:S}))}catch(e){}},400)}
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-function buildHTML(){const css=document.getElementById('css').textContent;const app=document.getElementById('app').textContent;const json=JSON.stringify(S).replace(/</g,'\\u003c');const end='</'+'script>';return '<!DOCTYPE html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>'+esc((S.f.name||'Character')+' – character sheet')+'</title>'+HEAD_LINKS+'<style id="css">'+css+'</style></head><body><div id="root"></div><script type="application/json" id="state">'+json+end+'<script id="app">'+app+end+'</body></html>'}
-async function save(){if(!ART||saving||RO)return;saving=true;saveMsg='';updateSaveUI();const prev=S.savedAt;S.savedAt=Date.now();try{await ART.publish(buildHTML());dirty=false;saving=false;updateSaveUI()}catch(e){S.savedAt=prev;saving=false;const c=e&&e.code;if(c==='not_writer'||c==='not_granted'){RO=true}else if(c==='conflict'){saveMsg='A newer version was saved elsewhere. Loading it now.'}else if(c==='rate_limited'){saveMsg='Saving too often. Wait a moment, then save again.'}else if(c==='too_large'){saveMsg='Sheet is too large to save. Shorten some rules text.'}else{saveMsg='Save didn’t go through. Try again.'}updateSaveUI()}}
-let saveBtn,statusEl;
-function updateSaveUI(){if(!saveBtn)return;if(RO){saveBtn.hidden=true;statusEl.textContent='View only. Edits stay on this device.';statusEl.className='status';return}if(!ART){saveBtn.hidden=true;statusEl.textContent='Changes kept on this device';statusEl.className='status';return}saveBtn.hidden=false;saveBtn.disabled=saving||!dirty;saveBtn.textContent=saving?'Saving…':'Save sheet';statusEl.textContent=saveMsg||(saving?'':dirty?'Unsaved changes':'Saved');statusEl.className='status'+(dirty||saveMsg?' dirty':'')}
-
-/* entry lists */
-function listBox(key){const wrap=h('div',{class:'list'});function r(){wrap.textContent='';const arr=gp(key)||[];arr.forEach((it,i)=>wrap.append(row(key,i,it,r)));wrap.append(h('button',{type:'button',class:'add',onclick:()=>openEntry(key,-1,r)},'+ '+KINDS[kindOf(key)].add))}r();return wrap}
-function row(key,i,it,r){const k=kindOf(key);const parts=[];
- if(k==='spell'&&!key.startsWith('sp.levels.0.')){const cb=h('input',{type:'checkbox','aria-label':'Prepared: '+(it.name||'spell')});cb.checked=!!it.prepared;cb.addEventListener('change',()=>sp(key+'.'+i+'.prepared',cb.checked));parts.push(cb)}
- parts.push(h('button',{type:'button',class:'ename'+(rule(it.name)?'':' norule'),onclick:()=>openEntry(key,i,r)},it.name||'Untitled'));
- if(it.note)parts.push(h('span',{class:'note'},it.note));
- if(k==='attacks'){parts.push(h('span',{class:'atk'},it.bonus||''),h('span',{class:'dmg'},it.damage||''))}
- if(n(it.uses)>0)parts.push(pips(()=>n(it.uses),key+'.'+i+'.used','Uses spent: '+it.name));
- return h('div',{class:'erow '+k},parts)}
-
-function openEntry(key,idx,rr){
- const k=kindOf(key);let i=idx;let it=i<0?{name:''}:Object.assign({},gp(key)[i]);
- let ctrl=null;
- const m=h('div',{class:'modal',role:'dialog','aria-modal':'true','aria-labelledby':'mt'});
- const ov=h('div',{class:'ov',onclick:e=>{if(e.target===ov)close()}},m);
- const prevFocus=document.activeElement;
- document.body.append(ov);document.body.classList.add('locked');
- function onKey(e){if(e.key==='Escape')close()}
- document.addEventListener('keydown',onKey);
- function close(){if(ctrl)ctrl.abort();ov.remove();document.body.classList.remove('locked');document.removeEventListener('keydown',onKey);if(prevFocus&&prevFocus.focus)prevFocus.focus()}
- function head(title){return h('div',{class:'mhead'},h('h2',{id:'mt'},title),h('button',{type:'button',class:'x',onclick:close,'aria-label':'Close'},'×'))}
- function view(){m.textContent='';const R=rule(it.name);
-  m.append(head(it.name||'Untitled'));
-  if(R&&R.tag)m.append(h('p',{class:'tag'},R.tag));
-  const meta=[];
-  if(k==='attacks'){if(it.bonus)meta.push(h('span',{class:'chip'},'Attack ',h('b',null,it.bonus)));if(it.damage)meta.push(h('span',{class:'chip'},'Damage ',h('b',null,it.damage)))}
-  if(n(it.uses)>0)meta.push(h('span',{class:'chip'},'Uses ',h('b',null,(n(it.uses)-Math.min(n(it.used),n(it.uses)))+' of '+n(it.uses)),' left'));
-  if(R&&R.dc==='con')meta.push(h('span',{class:'chip'},'Your rune save DC ',h('b',null,String(runeDC()))));
-  if(k==='spell'&&S.sp.ability){meta.push(h('span',{class:'chip'},'Spell save DC ',h('b',null,String(8+P()+M(S.sp.ability)))),h('span',{class:'chip'},'Spell attack ',h('b',null,sg(P()+M(S.sp.ability)))))}
-  if(it.note)meta.push(h('span',{class:'chip'},it.note));
-  if(meta.length)m.append(h('div',{class:'mmeta'},meta));
-  m.append(h('div',{class:'rules'},R?paras(R.text):h('p',{class:'empty'},'No rules saved for this yet. Choose Edit to write them'+(SAMPLE?', or let Claude draft them.':'.'))));
-  m.append(h('div',{class:'mact'},h('span',{class:'sp'}),h('button',{type:'button',class:'btn ghost',onclick:edit},R?'Edit':'Edit and add rules'),h('button',{type:'button',class:'btn',onclick:close},'Done')));
-  m.querySelector('.x').focus()}
- function edit(){m.textContent='';const isNew=i<0;
-  m.append(head(isNew?KINDS[k].add:'Edit '+(it.name||'entry')));
-  const nm=h('input',{type:'text',value:it.name||'',placeholder:'Name'});
-  const R0=rule(it.name);
-  const ta=h('textarea',{class:'plain',placeholder:'Rules text: what it does, range, duration, damage, uses…'});ta.value=R0?R0.text:'';
-  const tag=h('input',{type:'text',placeholder:'e.g. Feat, Fighter level 2, 1st-level evocation'});tag.value=R0&&R0.tag?R0.tag:'';
-  const L=(t,el)=>h('label',{class:'fld'},el,h('span',{class:'fl'},t));
-  const f=h('div',{class:'form'},L('Name',nm));
-  let bonus,dmg,uses,note;
-  if(k==='attacks'){bonus=h('input',{type:'text',value:it.bonus||'',placeholder:'+7'});dmg=h('input',{type:'text',value:it.damage||'',placeholder:'2d6+5 slashing'});f.append(h('div',{class:'two'},L('Attack bonus',bonus),L('Damage / type',dmg)))}
-  if(k==='features'||k==='equip'||k==='attacks'||k==='spell'){note=h('input',{type:'text',value:it.note||'',placeholder:k==='features'?'e.g. Carved on: sword':''});uses=h('input',{type:'text',inputmode:'numeric',value:it.uses||'',placeholder:'0'});f.append(h('div',{class:'two'},L('Note',note),k==='features'?L('Uses (tracker dots)',uses):h('span')))}
-  f.append(L('Source / type',tag),L('Rules',ta));
-  const msg=h('div',{class:'msg',role:'status'});
-  const act=h('div',{class:'mact'});
-  if(SAMPLE){const db=h('button',{type:'button',class:'btn ghost'},'Draft rules with Claude');db.addEventListener('click',async()=>{const name=nm.value.trim();if(!name){msg.textContent='Add a name first.';nm.focus();return}if(ctrl)ctrl.abort();ctrl=new AbortController();db.disabled=true;msg.textContent='Claude is writing…';const kind={attacks:'weapon or attack',features:'class feature, feat or trait',prof:'proficiency or language',equip:'item or piece of equipment',spell:'spell'}[k];const ctx='The character is: '+[S.f.race,S.f.classLevel].filter(Boolean).join(' ')+'.';try{const res=await SAMPLE('Write a short rules summary of the Dungeons & Dragons 5th edition '+kind+' called "'+name+'" for a player\'s character sheet. '+ctx+' Write it in your own words as plain text: no markdown, no headings, 2–4 short paragraphs separated by blank lines, under 170 words. Include the key numbers (action type, range, duration, damage, saving throw, uses, recovery). If the 2014 and 2024 rules differ meaningfully, note both briefly. If you are unsure what it is, say so in one sentence.',{signal:ctrl.signal,modelTier:'quick',cache:false,onText:x=>{ta.value=x.text}});ta.value=String(res.text||'').trim();msg.textContent='Check it against your books, then save.'}catch(e){const c=e&&e.code;if(c==='cancelled')return;if(e&&e.text)ta.value=e.text;if(c==='not_granted'){db.remove();msg.textContent='Claude drafting isn’t allowed in this view. Write the rules yourself.'}else if(c==='rate_limited')msg.textContent='Too many requests right now. Try again in a minute.';else msg.textContent='Couldn’t draft the rules. Try again or write them yourself.'}finally{db.disabled=false}});act.append(db)}
-  act.append(h('span',{class:'sp'}));
-  if(!isNew){let armed=false;const del=h('button',{type:'button',class:'btn danger'},'Delete');del.addEventListener('click',()=>{if(!armed){armed=true;del.textContent='Tap again to delete';return}const arr=gp(key);arr.splice(i,1);changed();rr();close()});act.append(del)}
-  act.append(h('button',{type:'button',class:'btn ghost',onclick:()=>{if(ctrl)ctrl.abort();isNew?close():view()}},'Cancel'));
-  act.append(h('button',{type:'button',class:'btn accent',onclick:()=>{
-   const name=nm.value.trim();if(!name){msg.textContent='Give it a name.';nm.focus();return}
-   it.name=name;if(bonus){it.bonus=bonus.value.trim();it.damage=dmg.value.trim()}if(note)it.note=note.value.trim()||undefined;if(k==='features'){it.uses=uses.value.trim();it.used=Math.min(n(it.used),n(it.uses))}
-   const text=ta.value.trim();const rk=ruleKey(name);
-   if(text){if(rk){S.lib[rk].text=text;S.lib[rk].tag=tag.value.trim()}else{S.lib[norm(name)]={name,tag:tag.value.trim(),text}}}
-   else if(rk&&R0&&ruleKey(it.name)===rk&&ruleKey(name)===rk){delete S.lib[rk]}
-   const arr=gp(key);if(i<0){arr.push(it);i=arr.length-1}else arr[i]=it;it=Object.assign({},arr[i]);
-   changed();rr();view()}},'Save'));
-  m.append(f,msg,act);nm.focus()}
- i<0?edit():view();
-}
-
-/* pages */
-function sheetPage(){
- const head=h('div',{class:'head'},
-  h('label',{class:'fld cname'},inp('f.name',{label:'Character name',after:()=>{}}),h('span',{class:'fl'},'Character name')),
-  h('div',{class:'meta'},fld('f.classLevel','Class & level'),fld('f.background','Background'),fld('f.player','Player name'),fld('f.race','Race'),fld('f.alignment','Alignment'),fld('f.xp','Experience points',{num:true})));
-
- const abils=h('div',{class:'abils'},ABIL.map(([a,l])=>h('div',{class:'abil'},h('span',{class:'an'},l),dv(()=>sg(M(a)),'am'),inp('f.'+a,{label:l+' score',num:true}))));
-
- const insp=h('input',{type:'checkbox'});insp.checked=!!S.f.insp;insp.addEventListener('change',()=>sp('f.insp',insp.checked));
- const pb=inp('f.prof',{label:'Proficiency bonus',num:true,cls:'profin'});
- const top=h('div',{class:'row2'},h('div',{class:'insp',style:'flex:1'},h('label',null,insp,'Inspiration')),h('div',{class:'insp',style:'flex:1.4'},h('label',null,pb,'Proficiency bonus')));
-
- const saves=h('ul',{class:'checks'},ABIL.map(([a,l])=>{const cb=h('input',{type:'checkbox'});cb.checked=!!(S.f.saves||{})[a];cb.addEventListener('change',()=>{sp('f.saves.'+a,cb.checked);derive()});return h('li',null,h('label',null,cb,dv(()=>sg(saveV(a)),'v'),l))}));
- const skills=h('ul',{class:'checks'},SKILLS.map(([k,l,a])=>{const cb=h('input',{type:'checkbox'});cb.checked=!!(S.f.skills||{})[k];cb.addEventListener('change',()=>{sp('f.skills.'+k,cb.checked);derive()});return h('li',null,h('label',null,cb,dv(()=>sg(skillV(k,a)),'v'),l,h('span',{class:'ab'},SHORT[a])))}));
- const passive=h('div',{class:'passive'},dv(()=>String(10+skillV('perception','wis')),'big'),h('span',{class:'sc'},'Passive Wisdom (Perception)'));
-
- const tiles=h('div',{class:'tiles'},
-  h('label',{class:'tile shield'},inp('f.ac',{label:'Armor class',num:true}),h('span',{class:'fl'},'Armor class')),
-  h('div',{class:'tile'},dv(()=>sg(M('dex')),'big'),h('span',{class:'fl'},'Initiative')),
-  h('label',{class:'tile'},inp('f.speed',{label:'Speed',num:true}),h('span',{class:'fl'},'Speed')));
- const hp=box('Hit points',h('div',{class:'hp'},h('label',{class:'fld cur'},inp('f.hpCur',{label:'Current hit points',num:true}),h('span',{class:'fl'},'Current')),fld('f.hpMax','Maximum',{num:true}),fld('f.hpTemp','Temporary',{num:true})));
- const hd=box('Hit dice & death saves',h('div',{style:'display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:end'},fld('f.hdTotal','Total'),fld('f.hdType','Die'),h('div',{class:'ds',style:'grid-column:1/-1'},h('span',null,'Successes'),pips(()=>3,'f.dsS','Death save successes'),h('span',null,'Failures'),pips(()=>3,'f.dsF','Death save failures','red'))));
-
- const attacks=box('Attacks',[h('p',{class:'hint'},'Tap a name to see its rules.'),listBox('attacks')]);
- const features=box('Features & traits',[h('p',{class:'hint'},'Tap a name to see its rules. Dots track uses.'),listBox('features')]);
- const profs=box('Other proficiencies & languages',listBox('prof'));
- const equip=box('Equipment',[listBox('equip'),h('div',{class:'coins'},['cp','sp','ep','gp','pp'].map(c=>fld('f.coins.'+c,c.toUpperCase(),{num:true})))]);
- const pers=box('Personality',h('div',{class:'form',style:'margin-top:0'},fld('f.traits','Personality traits',{area:true,rows:2}),fld('f.ideals','Ideals',{area:true,rows:2}),fld('f.bonds','Bonds',{area:true,rows:2}),fld('f.flaws','Flaws',{area:true,rows:2})));
-
- return h('div',null,head,h('div',{class:'grid'},
-  h('div',{class:'col'},abils),
-  h('div',{class:'col'},top,box('Saving throws',saves),box('Skills',skills),passive),
-  h('div',{class:'col'},tiles,hp,hd,attacks,features),
-  h('div',{class:'col span2'},pers,profs,equip)));
-}
-function storyPage(){
- return h('div',null,
-  h('div',{class:'head'},h('div',{class:'bar-name serif',style:'font-size:2rem'},dv(()=>S.f.name||'Unnamed')),h('div',{class:'phys'},fld('f.age','Age'),fld('f.height','Height'),fld('f.weight','Weight'),fld('f.eyes','Eyes'),fld('f.skin','Skin'),fld('f.hair','Hair'))),
-  h('div',{class:'story'},
-   h('div',{class:'col'},box('Character appearance',inp('f.appearance',{area:true,rows:7,label:'Character appearance',ph:'What do people notice first?'})),box('Character backstory',inp('f.backstory',{area:true,rows:14,label:'Character backstory'}))),
-   h('div',{class:'col'},box('Allies & organizations',h('div',{class:'form',style:'margin-top:0'},inp('f.allies',{area:true,rows:5,label:'Allies and organizations'}),h('div',{class:'two',style:'display:grid;grid-template-columns:1fr 1fr;gap:12px'},fld('f.orgName','Organization name'),fld('f.symbol','Symbol')))),box('Additional features & traits',inp('f.addFeatures',{area:true,rows:6,label:'Additional features and traits'})),box('Treasure',inp('f.treasure',{area:true,rows:7,label:'Treasure'})))));
-}
-function spellPage(){
- const sel=h('select',{'aria-label':'Spellcasting ability'},h('option',{value:''},'None'),ABIL.map(([a,l])=>h('option',{value:a},l)));sel.value=S.sp.ability||'';sel.addEventListener('change',()=>{sp('sp.ability',sel.value);derive()});
- const hd=h('div',{class:'spellhead'},fld('sp.cls','Spellcasting class'),h('label',{class:'fld'},sel,h('span',{class:'fl'},'Spellcasting ability')),h('div',{class:'tile'},dv(()=>S.sp.ability?String(8+P()+M(S.sp.ability)):'–','big'),h('span',{class:'fl'},'Spell save DC')),h('div',{class:'tile'},dv(()=>S.sp.ability?sg(P()+M(S.sp.ability)):'–','big'),h('span',{class:'fl'},'Spell attack bonus')));
- const grid=h('div',{class:'spellgrid'},S.sp.levels.map((L,lv)=>{const key='sp.levels.'+lv+'.list';const has=L.list.length>0||n(L.slots)>0;
-  const d=h('details',{class:'box lvl',open:(has||lv<=1)?true:null});
-  const cnt=dv(()=>{const c=S.sp.levels[lv].list.length;return c?c+(c===1?' spell':' spells'):''},'cnt');
-  d.append(h('summary',null,h('span',{class:'ln'},String(lv)),h('span',{class:'lt'},lv===0?'Cantrips':'Level '+lv),cnt));
-  const body=h('div',{class:'body'});
-  if(lv>0){const pp=pips(()=>Math.min(n(S.sp.levels[lv].slots),12),'sp.levels.'+lv+'.used','Level '+lv+' slots expended');body.append(h('div',{class:'slots'},h('label',null,'Slots ',inp('sp.levels.'+lv+'.slots',{label:'Level '+lv+' slots total',num:true,after:()=>pp.rerender()})),h('span',null,'Expended'),pp))}
-  if(lv===1)body.append(h('p',{class:'hint'},'Tick the box to mark a spell prepared.'));
-  body.append(listBox(key));d.append(body);return d}));
- return h('div',null,hd,grid);
-}
-
-/* shell */
-let tab='sheet';try{tab=localStorage.getItem('charsheet-blank-tab')||'sheet'}catch(e){}
+/* tracker */
+var KEY="kavrex-tracker-v1", st={};
+try{st=JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){st={}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
+var groups=document.querySelectorAll(".pips"), MAX={};
+groups.forEach(function(g){MAX[g.dataset.key]=+g.dataset.n});
 function render(){
- const root=document.getElementById('root');root.textContent='';for(const k in D)delete D[k];
- statusEl=h('span',{class:'status',role:'status'});saveBtn=h('button',{type:'button',class:'btn',onclick:save,hidden:true},'Save sheet');
- const pages={sheet:['Sheet',sheetPage],story:['Story',storyPage],spells:['Spells',spellPage]};
- const tabs=h('div',{class:'tabs',role:'tablist'});const main=h('main');
- for(const id in pages){const pg=h('div',{class:'page',role:'tabpanel',id:'p-'+id,hidden:tab!==id},pages[id][1]());main.append(pg);
-  tabs.append(h('button',{type:'button',class:'tab',role:'tab','aria-selected':String(tab===id),'aria-controls':'p-'+id,onclick:e=>{tab=id;try{localStorage.setItem('charsheet-blank-tab',id)}catch(_){}tabs.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',String(t===e.currentTarget)));main.querySelectorAll('.page').forEach(p=>p.hidden=p.id!=='p-'+id);window.scrollTo(0,0)}},pages[id][0]))}
- let armed=false;const blank=h('button',{type:'button',class:'btn danger'},'Start a blank sheet');
- blank.addEventListener('click',()=>{if(!armed){armed=true;blank.textContent='Tap again to clear every field (rules stay)';return}
-  const keepLib=S.lib;S={savedAt:S.savedAt,f:{prof:'2',saves:{},skills:{},coins:{},dsS:0,dsF:0},attacks:[],features:[],prof:[],equip:[],sp:{cls:'',ability:'',levels:Array.from({length:10},()=>({slots:'',used:0,list:[]}))},lib:keepLib};changed();render();window.scrollTo(0,0)});
- main.append(h('div',{class:'foot'},blank));
- root.append(h('header',{class:'bar'},h('div',{class:'bar-in'},h('div',{class:'bar-name'},dv(()=>S.f.name||'Unnamed')),tabs,h('div',{class:'savewrap'},statusEl,saveBtn))),main);
- updateSaveUI();
+  groups.forEach(function(g){
+    var k=g.dataset.key,n=MAX[k],used=st[k]||0;g.innerHTML="";
+    for(var i=0;i<n;i++){var b=document.createElement("button");b.className="pip";b.type="button";
+      b.setAttribute("aria-pressed",i<used?"true":"false");b.setAttribute("aria-label",k+" "+(i+1));
+      (function(i){b.onclick=function(){st[k]=(i<(st[k]||0))?i:i+1;save();render()}})(i);g.appendChild(b)}
+  });
+  document.getElementById("loh").value=(st.loh==null?15:st.loh);
 }
+document.getElementById("loh").addEventListener("input",function(e){st.loh=Math.max(0,Math.min(15,parseInt(e.target.value,10)||0));save()});
+document.getElementById("sr").onclick=function(){st.cd=Math.max(0,(st.cd||0)-1);save();render()};
+document.getElementById("lr").onclick=function(){st={};save();render()};
 render();
-document.addEventListener('input',e=>{if(e.target.closest&&e.target.closest('.cname'))derive()});
-if(window.claude&&typeof window.claude.use==='function'){
- window.claude.use('artifact').then(a=>{ART=a;updateSaveUI()}).catch(()=>{});
- window.claude.use('sample').then(s=>{SAMPLE=s}).catch(()=>{});
+
+/* rules card */
+function h(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e}
+var LABEL={slots:"1st-level slots",cd:"Channel Divinity",breath:"Breath Weapon uses",smite:"Free cast",loh:"Pool"};
+function liveChip(k){
+  if(k==="loh"){var left=st.loh==null?15:st.loh;return [LABEL.loh,left+" of 15 left"]}
+  var n=MAX[k];if(!n)return null;return [LABEL[k],(n-Math.min(st[k]||0,n))+" of "+n+" left"];
 }
+function paras(text){
+  var out=document.createDocumentFragment();
+  text.split(/\n\s*\n/).forEach(function(block){
+    var p=h("p");
+    block.split("\n").forEach(function(line,i){
+      if(i)p.appendChild(h("br"));
+      var re=/\[\[([a-z]+)\|([^\]]+)\]\]/g,last=0,m;
+      while((m=re.exec(line))){
+        p.appendChild(document.createTextNode(line.slice(last,m.index)));
+        var b=h("button","rl",m[2]);b.type="button";b.dataset.r=m[1];p.appendChild(b);last=re.lastIndex;
+      }
+      p.appendChild(document.createTextNode(line.slice(last)));
+    });
+    out.appendChild(p);
+  });
+  return out;
+}
+
+var ov=null,modal=null,prevFocus=null,stack=[];
+function close(){
+  if(!ov)return;ov.remove();ov=null;stack=[];document.body.classList.remove("locked");
+  document.removeEventListener("keydown",onKey);if(prevFocus&&prevFocus.focus)prevFocus.focus();
+}
+function onKey(e){if(e.key==="Escape")close()}
+function show(k){
+  var R=LIB[k];modal.textContent="";
+  var head=h("div","mhead"),t=h("h2",null,R.name);t.id="mt";
+  var x=h("button","x","×");x.type="button";x.setAttribute("aria-label","Close");x.onclick=close;
+  head.append(t,x);modal.appendChild(head);
+  if(R.tag)modal.appendChild(h("p","mtag",R.tag));
+  var chips=(R.chips||[]).slice(),live=R.trk&&liveChip(R.trk);
+  if(chips.length||live){
+    var mm=h("div","mmeta");
+    chips.forEach(function(c){var s=h("span","chip",c[0]+" ");s.appendChild(h("b",null,c[1]));mm.appendChild(s)});
+    if(live){var s=h("span","chip live",live[0]+": ");s.appendChild(h("b",null,live[1]));mm.appendChild(s)}
+    modal.appendChild(mm);
+  }
+  var rules=h("div","rules");rules.appendChild(paras(R.text));modal.appendChild(rules);
+  var act=h("div","mact");
+  if(stack.length>1){var back=h("button","btn","← "+LIB[stack[stack.length-2]].name);back.type="button";
+    back.onclick=function(){stack.pop();show(stack[stack.length-1])};act.appendChild(back)}
+  act.appendChild(h("span","sp"));
+  var done=h("button","btn solid","Done");done.type="button";done.onclick=close;act.appendChild(done);
+  modal.appendChild(act);modal.scrollTop=0;x.focus();
+}
+function open(k){
+  if(!LIB[k])return;
+  if(!ov){
+    prevFocus=document.activeElement;
+    modal=h("div","modal");modal.setAttribute("role","dialog");modal.setAttribute("aria-modal","true");modal.setAttribute("aria-labelledby","mt");
+    ov=h("div","ov");ov.appendChild(modal);ov.addEventListener("click",function(e){if(e.target===ov)close()});
+    document.body.appendChild(ov);document.body.classList.add("locked");document.addEventListener("keydown",onKey);
+  }
+  if(stack[stack.length-1]!==k)stack.push(k);
+  show(k);
+}
+document.addEventListener("click",function(e){var b=e.target.closest("[data-r]");if(b){e.preventDefault();open(b.dataset.r)}});
 })();
-</script></body></html>
+</script>
+</body></html>
