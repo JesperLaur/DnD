@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Blank character sheet</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:wght@500;700;800&family=Alegreya+SC:wght@500;700&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap"><style id="css">
+:root{--paper:#E2E5E8;--sheet:#F5F6F8;--ink:#1B2130;--muted:#586070;--line:#B0B6C0;--soft:#D5DAE0;--accent:#8C2A22;--accent-ink:#FFF6F3;--bronze:#7E6128;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#121519;--sheet:#1A1E25;--ink:#E3E6EB;--muted:#9AA2AF;--line:#3A414D;--soft:#262B34;--accent:#E3806F;--accent-ink:#1A0E0C;--bronze:#CFA960;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#121519;--sheet:#1A1E25;--ink:#E3E6EB;--muted:#9AA2AF;--line:#3A414D;--soft:#262B34;--accent:#E3806F;--accent-ink:#1A0E0C;--bronze:#CFA960;color-scheme:dark}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.45 "Alegreya Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+body.locked{overflow:hidden}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sc{font-family:"Alegreya SC",Georgia,serif;letter-spacing:.03em}
+.serif{font-family:"Alegreya",Georgia,serif}
+
+/* top bar */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--paper);border-bottom:1px solid var(--line)}
+.bar-in{max-width:1180px;margin:0 auto;padding:8px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.bar-name{font-family:"Alegreya",Georgia,serif;font-weight:800;font-size:1.15rem;flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tabs{display:flex;gap:2px;order:3;width:100%}
+.tab{flex:1;background:none;border:0;border-bottom:3px solid transparent;padding:6px 4px;font-family:"Alegreya SC",Georgia,serif;font-size:1rem;color:var(--muted)}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.savewrap{display:flex;align-items:center;gap:10px}
+.status{font-size:.85rem;color:var(--muted)}
+.status.dirty{color:var(--accent)}
+.btn{border:1px solid var(--ink);background:var(--ink);color:var(--paper);border-radius:6px;padding:6px 14px;font-weight:700}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.danger{background:transparent;color:var(--accent);border-color:var(--accent)}
+.btn.accent{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+@media(min-width:760px){.tabs{order:0;width:auto}.tab{flex:none;padding:6px 14px}}
+
+main{max-width:1180px;margin:0 auto;padding:14px 14px 60px}
+.page[hidden]{display:none}
+
+/* boxes */
+.box{background:var(--sheet);border:1px solid var(--line);border-radius:12px 3px 12px 3px;display:flex;flex-direction:column;min-width:0}
+.box>.body{padding:12px 14px;flex:1}
+.lab{font-family:"Alegreya SC",Georgia,serif;font-size:.85rem;letter-spacing:.05em;color:var(--muted);text-align:center;border-top:1px solid var(--soft);padding:4px 8px 6px}
+
+/* fields */
+.fld{display:flex;flex-direction:column;min-width:0}
+.fld input,.fld textarea,.fld select,.plain{background:transparent;border:0;border-bottom:1px solid var(--line);padding:4px 2px;width:100%;border-radius:0}
+.fld textarea,textarea.plain{border:1px solid var(--soft);border-radius:6px;padding:8px;resize:vertical;line-height:1.45}
+.fl{font-size:.78rem;color:var(--muted);font-family:"Alegreya SC",Georgia,serif;letter-spacing:.04em;padding-top:2px}
+input[type=number]{-moz-appearance:textfield}
+input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+
+/* header */
+.head{display:grid;gap:14px;grid-template-columns:1fr;margin-bottom:14px}
+.cname input{font-family:"Alegreya",Georgia,serif;font-weight:800;font-size:2.4rem;line-height:1.1;border-bottom:2px solid var(--ink);padding:0 2px 4px}
+.meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 16px}
+@media(min-width:760px){.head{grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);align-items:end}.meta{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+/* sheet grid */
+.grid{display:grid;gap:14px;grid-template-columns:1fr}
+.col{display:flex;flex-direction:column;gap:14px;min-width:0}
+@media(min-width:760px){.grid{grid-template-columns:150px minmax(0,1fr)}.grid>.span2{grid-column:1/-1}}
+@media(min-width:1060px){.grid{grid-template-columns:150px minmax(0,1fr) minmax(0,1.15fr) minmax(0,1fr)}.grid>.span2{grid-column:auto}}
+
+/* abilities */
+.abils{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media(min-width:760px){.abils{grid-template-columns:1fr}}
+.abil{background:var(--sheet);border:1px solid var(--line);border-radius:14px 14px 40px 40px/14px 14px 22px 22px;text-align:center;padding:8px 6px 10px;display:flex;flex-direction:column;align-items:center}
+.abil .an{font-family:"Alegreya SC",Georgia,serif;font-size:.85rem;color:var(--muted)}
+.abil .am{font-family:"Alegreya",Georgia,serif;font-weight:800;font-size:2.3rem;line-height:1;margin:2px 0 6px}
+.abil input{width:3.2em;text-align:center;border:1px solid var(--line);border-radius:999px;background:var(--paper);padding:2px 0;font-weight:700}
+
+/* small stat tiles */
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.tile{background:var(--sheet);border:1px solid var(--line);border-radius:10px;text-align:center;padding:8px 4px 4px;display:flex;flex-direction:column;justify-content:space-between}
+.tile .big{font-family:"Alegreya",Georgia,serif;font-weight:800;font-size:1.9rem;line-height:1.1}
+.tile input{text-align:center;border:0;background:transparent;width:100%;font-family:"Alegreya",Georgia,serif;font-weight:800;font-size:1.9rem;line-height:1.1;padding:0}
+.tile .fl{text-align:center}
+.shield{border-radius:10px 10px 50% 50%/10px 10px 30% 30%}
+
+.row2{display:flex;gap:10px;align-items:center}
+.insp{display:flex;align-items:center;gap:10px;background:var(--sheet);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.insp label{display:flex;align-items:center;gap:8px;font-family:"Alegreya SC",Georgia,serif}
+.insp input[type=checkbox]{width:20px;height:20px;accent-color:var(--accent)}
+.profin{width:2.6em;text-align:center;border:1px solid var(--line);border-radius:999px;background:var(--paper);font-weight:700;padding:2px 0}
+
+/* checks */
+.checks{list-style:none;margin:0;padding:0}
+.checks li{display:flex;align-items:center;gap:8px;padding:3px 0;border-bottom:1px dotted var(--soft)}
+.checks li:last-child{border-bottom:0}
+.checks input{width:18px;height:18px;accent-color:var(--ink);margin:0;flex:none}
+.checks .v{width:2.4em;text-align:right;font-weight:700;font-variant-numeric:tabular-nums;flex:none}
+.checks .ab{color:var(--muted);font-size:.85rem;margin-left:auto}
+.checks label{display:flex;align-items:center;gap:8px;flex:1;cursor:pointer}
+.passive{display:flex;align-items:center;gap:12px;background:var(--sheet);border:1px solid var(--line);border-radius:999px;padding:6px 14px 6px 6px}
+.passive .big{font-family:"Alegreya",Georgia,serif;font-weight:800;font-size:1.4rem;width:2.2em;height:2.2em;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center}
+
+/* hp */
+.hp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:end}
+.hp .cur input{font-family:"Alegreya",Georgia,serif;font-weight:800;font-size:2.6rem;text-align:center;border-bottom:2px solid var(--ink)}
+.hp .fld input{text-align:center}
+.ds{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:center;font-size:.9rem}
+
+/* pips */
+.pips{display:inline-flex;gap:5px;flex-wrap:wrap;vertical-align:middle}.ds .pips{flex-wrap:nowrap}
+.pip{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--ink);background:transparent;padding:0}
+.pip.on{background:var(--ink)}
+.pips.red .pip{border-color:var(--accent)}.pips.red .pip.on{background:var(--accent)}
+
+/* entries */
+.list{display:flex;flex-direction:column}
+.erow{display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap;padding:7px 0;border-bottom:1px solid var(--soft)}
+.ename{background:none;border:0;padding:0;text-align:left;font-weight:700;text-decoration:underline;text-decoration-style:dotted;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:4px}
+.ename:hover{color:var(--accent)}
+.ename.norule{text-decoration-color:var(--line);font-weight:500}
+.erow .atk{font-variant-numeric:tabular-nums;font-weight:700;margin-left:auto}
+.erow .dmg{color:var(--muted);min-width:7.5em;text-align:right}
+.erow .note{color:var(--muted);font-size:.88rem;font-style:italic}
+.erow .pips{margin-left:auto}
+.erow.spell input[type=checkbox]{width:17px;height:17px;accent-color:var(--accent);margin:0}
+.add{background:none;border:1px dashed var(--line);border-radius:6px;color:var(--muted);padding:6px;margin-top:10px}
+.add:hover{color:var(--ink);border-color:var(--ink)}
+.hint{font-size:.85rem;color:var(--muted);margin:0 0 6px}
+
+.coins{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-top:12px}
+.coins .fld input{text-align:center}
+.coins .fl{text-align:center}
+
+/* story */
+.story{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:760px){.story{grid-template-columns:minmax(0,1fr) minmax(0,1.6fr)}}
+.phys{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 16px}
+
+/* spells */
+.spellhead{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:14px}
+@media(min-width:760px){.spellhead{grid-template-columns:2fr 1.3fr 1fr 1fr}}
+.spellgrid{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:760px){.spellgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:1060px){.spellgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.lvl summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 14px}
+.lvl summary::-webkit-details-marker{display:none}
+.lvl .ln{font-family:"Alegreya",Georgia,serif;font-weight:800;font-size:1.6rem;width:1.6em;height:1.6em;display:grid;place-items:center;border:1.5px solid var(--ink);border-radius:50%;flex:none;line-height:1}
+.lvl .lt{font-family:"Alegreya SC",Georgia,serif;flex:1}
+.lvl .cnt{color:var(--muted);font-size:.85rem}
+.lvl .body{padding-top:0}
+.slots{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:6px 0 4px;font-size:.9rem;color:var(--muted)}
+.slots input{width:3em;text-align:center;border:1px solid var(--line);border-radius:999px;background:var(--paper);padding:1px 0;color:var(--ink);font-weight:700}
+
+.foot{margin-top:28px;display:flex;justify-content:center}
+
+/* modal */
+.ov{position:fixed;inset:0;background:rgba(10,12,16,.5);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.modal{background:var(--sheet);color:var(--ink);width:100%;max-width:620px;max-height:88vh;overflow:auto;border-radius:16px 16px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 40px rgba(0,0,0,.25);animation:up .18s ease-out}
+@media(min-width:700px){.ov{align-items:center;padding:20px}.modal{border-radius:14px 4px 14px 4px;max-height:84vh;animation:none}}
+@keyframes up{from{transform:translateY(30px);opacity:.4}to{transform:none;opacity:1}}
+@media(prefers-reduced-motion:reduce){.modal{animation:none}}
+.mhead{display:flex;align-items:flex-start;gap:10px}
+.mhead h2{font-family:"Alegreya",Georgia,serif;font-weight:800;font-size:1.75rem;line-height:1.15;margin:0;flex:1}
+.x{background:none;border:1px solid var(--line);border-radius:50%;width:34px;height:34px;font-size:1.2rem;line-height:1;flex:none}
+.tag{color:var(--bronze);font-family:"Alegreya SC",Georgia,serif;margin:4px 0 0}
+.mmeta{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0}
+.chip{border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:.9rem}
+.chip b{font-variant-numeric:tabular-nums}
+.rules{font-family:"Alegreya",Georgia,serif;font-size:1.05rem;line-height:1.6;margin-top:14px;border-top:1px solid var(--soft);padding-top:6px;max-width:62ch}
+.rules p{margin:10px 0}
+.empty{color:var(--muted);font-style:italic}
+.mact{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;align-items:center}
+.mact .sp{flex:1}
+.form{display:grid;gap:12px;margin-top:12px}
+.form .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.modal .form textarea{min-height:220px}
+.msg{font-size:.88rem;color:var(--accent);min-height:1.2em}
+</style></head><body><div id="root"></div><script type="application/json" id="state">{"savedAt":0,"f":{"name":"","classLevel":"","background":"","player":"","race":"","alignment":"","xp":"","str":"10","dex":"10","con":"10","int":"10","wis":"10","cha":"10","prof":"2","insp":false,"ac":"10","speed":"30","hpMax":"","hpCur":"","hpTemp":"","hdType":"","hdTotal":"","dsS":0,"dsF":0,"saves":{},"skills":{},"traits":"","ideals":"","bonds":"","flaws":"","coins":{"cp":"","sp":"","ep":"","gp":"","pp":""},"age":"","height":"","weight":"","eyes":"","skin":"","hair":"","appearance":"","backstory":"","allies":"","orgName":"","symbol":"","addFeatures":"","treasure":""},"attacks":[],"features":[],"prof":[],"equip":[],"sp":{"cls":"","ability":"","levels":[{"slots":"","used":0,"list":[]},{"slots":"","used":0,"list":[]},{"slots":"","used":0,"list":[]},{"slots":"","used":0,"list":[]},{"slots":"","used":0,"list":[]},{"slots":"","used":0,"list":[]},{"slots":"","used":0,"list":[]},{"slots":"","used":0,"list":[]},{"slots":"","used":0,"list":[]},{"slots":"","used":0,"list":[]}]},"lib":{"greatweaponfighting":{"name":"Great Weapon Fighting","tag":"Fighting style","aka":["gwf"],"text":"Applies to damage rolls for attacks with a melee weapon you hold in two hands; the weapon must be two-handed or versatile.\n\n2014 rules: when a damage die shows a 1 or 2, reroll it and keep the new result, even if it's another 1 or 2.\n2024 rules: treat any 1 or 2 on a damage die as a 3."},"lucky":{"name":"Lucky","tag":"Feat","text":"2014 rules: you have 3 luck points, regained on a long rest. When you make an attack roll, ability check or saving throw, spend a point to roll an extra d20 and pick which die counts. You can also spend one when you're attacked, rolling a d20 and choosing whether the attacker uses that roll or theirs.\n\n2024 rules: your luck points equal your proficiency bonus, regained on a long rest. Spend one to gain advantage on a d20 test, or to give an attacker disadvantage on an attack roll against you."},"savageattacker":{"name":"Savage Attacker","tag":"Feat","text":"Once per turn, when you hit with a weapon, roll the weapon's damage dice twice and use whichever total you like.\n\n2014 wording: applies to melee weapon attacks; you reroll the damage dice and can use either roll."},"greatsword":{"name":"Greatsword","tag":"Martial melee weapon","aka":["greatswor"],"text":"Damage 2d6 slashing. Heavy, two-handed. 6 lb.\n\nAttack bonus: Strength modifier + proficiency bonus.\n\nWeapon mastery (2024): Graze. If your attack misses, the target still takes damage equal to the ability modifier you used for the attack, of the weapon's damage type. This damage can't be increased."},"javelin":{"name":"Javelin","tag":"Simple melee weapon","text":"Damage 1d6 piercing. Thrown (range 30/120 ft). 2 lb.\n\nUses Strength for attack and damage, even when thrown.\n\nWeapon mastery (2024): Slow. When you hit and deal damage, the target's speed drops by 10 feet until the start of your next turn. Hitting it again doesn't lower it further."},"spear":{"name":"Spear","tag":"Simple melee weapon","text":"Damage 1d6 piercing, or 1d8 when held in two hands (versatile). Thrown (range 20/60 ft). 3 lb.\n\nWeapon mastery (2024): Sap. A creature you hit has disadvantage on its next attack roll before the start of your next turn."},"flail":{"name":"Flail","tag":"Martial melee weapon","text":"Damage 1d8 bludgeoning. 2 lb.\n\nWeapon mastery (2024): Sap. A creature you hit has disadvantage on its next attack roll before the start of your next turn."},"dagger":{"name":"Dagger","tag":"Simple melee weapon","text":"Damage 1d4 piercing. Finesse, light, thrown (range 20/60 ft). 1 lb.\n\nWeapon mastery (2024): Nick. When you make the extra attack from the light property, you make it as part of the Attack action instead of with a bonus action (once per turn)."},"chainmail":{"name":"Chain mail","tag":"Heavy armor","aka":["chainmailarmor"],"text":"Armor Class 16 (Dexterity doesn't add). Needs Strength 13, or your speed drops by 10 feet. Disadvantage on Dexterity (Stealth) checks. 55 lb."},"healerskit":{"name":"Healer's kit","tag":"Adventuring gear","aka":["healerkit","healerskit"],"text":"Ten uses. As an action (2024: Utilize action), spend one use to stabilize a creature at 0 hit points without making a Wisdom (Medicine) check."},"dungeoneerspack":{"name":"Dungeoneer's pack","tag":"Equipment pack","aka":["dungoneersbackpack","dungeoneersbackpack","dungoneerspack"],"text":"Contains a backpack, a crowbar, a hammer, 10 pitons, 10 torches, a tinderbox, 10 days of rations and a waterskin, plus 50 feet of hempen rope strapped to the side."},"quiver":{"name":"Quiver","tag":"Adventuring gear","text":"Holds up to 20 arrows (or bolts in some editions), keeping them at hand for drawing."},"smithstools":{"name":"Smith's tools","tag":"Artisan's tools","aka":["smithtools"],"text":"Proficiency lets you add your proficiency bonus to checks for working, repairing or identifying metal items, such as mending armor, forcing open metal fittings or judging the quality of a blade."},"diceset":{"name":"Dice set","tag":"Gaming set","aka":["gamingset","gamingsetdice","dice"],"text":"Proficiency lets you add your proficiency bonus to checks to play games of dice, and to spot someone cheating at them."},"giant":{"name":"Giant","tag":"Language","aka":["giantlanguage"],"text":"Spoken by giants and ogres. Written with the Dwarvish script."},"common":{"name":"Common","tag":"Language","aka":["commonlanguage"],"text":"The widely spoken trade language of most lands. Written with the Common script."},"slow":{"name":"Slow","tag":"Weapon mastery (2024)","text":"When you hit a creature and deal damage, its speed is reduced by 10 feet until the start of your next turn. Multiple hits don't reduce it beyond 10 feet."},"sap":{"name":"Sap","tag":"Weapon mastery (2024)","text":"A creature you hit has disadvantage on its next attack roll before the start of your next turn."},"graze":{"name":"Graze","tag":"Weapon mastery (2024)","text":"If your attack misses, the target still takes damage equal to the ability modifier you used for the attack. The damage can't be increased."},"longsword":{"name":"Longsword","tag":"Martial melee weapon","text":"Damage 1d8 slashing, or 1d10 when held in two hands (versatile). 3 lb.\n\nWeapon mastery (2024): Sap. A creature you hit has disadvantage on its next attack roll before the start of your next turn."},"shield":{"name":"Shield","tag":"Shield","text":"While holding a shield, your Armor Class increases by 2. You can't use a two-handed weapon while holding it. 6 lb."},"darkvision":{"name":"Darkvision","tag":"Trait","text":"You can see in dim light within range as if it were bright light, and in darkness as if it were dim light. You see only shades of gray in darkness."},"frightened":{"name":"Frightened","tag":"Condition","text":"Disadvantage on ability checks and attack rolls while the source of fear is within line of sight.\n\nThe creature can't willingly move closer to the source of its fear."},"prone":{"name":"Prone","tag":"Condition","text":"The creature can only crawl, or spend half its speed to stand up.\n\nDisadvantage on its attack rolls. Attacks against it have advantage within 5 feet, and disadvantage from farther away."},"concentration":{"name":"Concentration","tag":"Spellcasting rule","text":"You can concentrate on only one spell at a time; casting another concentration spell ends the first.\n\nWhen you take damage, make a Constitution save to keep concentrating: DC 10 or half the damage taken, whichever is higher (max 30). Concentration also ends if you are incapacitated or die."}}}</script><script id="app">
+(function(){
+"use strict";
+const HEAD_LINKS='<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:wght@500;700;800&family=Alegreya+SC:wght@500;700&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap">';
+const KEY='charsheet-blank-draft-v1';
+let S=JSON.parse(document.getElementById('state').textContent);
+const BASE=S.savedAt||0;
+let dirty=false,saving=false,RO=false,ART=null,SAMPLE=null,saveMsg='';
+try{const d=JSON.parse(localStorage.getItem(KEY)||'null');if(d&&d.base===BASE&&d.state){S=d.state;dirty=true}}catch(e){}
+
+const ABIL=[['str','Strength'],['dex','Dexterity'],['con','Constitution'],['int','Intelligence'],['wis','Wisdom'],['cha','Charisma']];
+const SHORT={str:'Str',dex:'Dex',con:'Con',int:'Int',wis:'Wis',cha:'Cha'};
+const SKILLS=[['acrobatics','Acrobatics','dex'],['animal','Animal Handling','wis'],['arcana','Arcana','int'],['athletics','Athletics','str'],['deception','Deception','cha'],['history','History','int'],['insight','Insight','wis'],['intimidation','Intimidation','cha'],['investigation','Investigation','int'],['medicine','Medicine','wis'],['nature','Nature','int'],['perception','Perception','wis'],['performance','Performance','cha'],['persuasion','Persuasion','cha'],['religion','Religion','int'],['sleight','Sleight of Hand','dex'],['stealth','Stealth','dex'],['survival','Survival','wis']];
+const KINDS={attacks:{add:'Add attack'},features:{add:'Add feature or trait'},prof:{add:'Add proficiency or language'},equip:{add:'Add item'},spell:{add:'Add spell'}};
+
+/* helpers */
+function h(tag,a,...kids){const e=document.createElement(tag);if(a)for(const k in a){const v=a[k];if(v==null||v===false)continue;if(k==='class')e.className=v;else if(k.slice(0,2)==='on')e.addEventListener(k.slice(2),v);else e.setAttribute(k,v===true?'':v)}for(const c of kids.flat()){if(c==null||c===false)continue;e.append(c.nodeType?c:document.createTextNode(String(c)))}return e}
+const n=v=>{const x=parseInt(v,10);return isNaN(x)?0:x};
+const sg=x=>(x>=0?'+':'')+x;
+function gp(p){return p.split('.').reduce((o,k)=>o==null?undefined:o[k],S)}
+function sp(p,v){const ks=p.split('.');let o=S;for(let i=0;i<ks.length-1;i++){if(o[ks[i]]==null)o[ks[i]]={};o=o[ks[i]]}o[ks[ks.length-1]]=v;changed()}
+const M=a=>Math.floor((n(S.f[a])-10)/2);
+const P=()=>n(S.f.prof);
+const saveV=a=>M(a)+(S.f.saves&&S.f.saves[a]?P():0);
+const skillV=(k,a)=>M(a)+(S.f.skills&&S.f.skills[k]?P():0);
+const runeDC=()=>8+P()+M('con');
+
+const D={};let dk=0;
+function dv(fn,cls){const k='d'+(dk++);D[k]=fn;return h('span',{'data-d':k,class:cls||null},fn())}
+function derive(){document.querySelectorAll('[data-d]').forEach(e=>{const f=D[e.dataset.d];if(f){const v=String(f());if(e.textContent!==v)e.textContent=v}})}
+
+function inp(path,o){o=o||{};const e=o.area?h('textarea',{rows:o.rows||3,placeholder:o.ph||null,'aria-label':o.label||null}):h('input',{type:'text',inputmode:o.num?'numeric':null,placeholder:o.ph||null,'aria-label':o.label||null,class:o.cls||null});const v=gp(path);e.value=v==null?'':v;e.addEventListener('input',()=>{sp(path,e.value);derive();if(o.after)o.after()});return e}
+function fld(path,label,o){o=o||{};return h('label',{class:'fld '+(o.wrap||'')},inp(path,Object.assign({},o,{label})),h('span',{class:'fl'},label))}
+function box(label,body,cls){return h('section',{class:'box '+(cls||'')},h('div',{class:'body'},body),h('div',{class:'lab'},label))}
+
+function pips(getMax,path,label,cls){const w=h('span',{class:'pips '+(cls||''),role:'group','aria-label':label});function r(){w.textContent='';const max=getMax();let v=n(gp(path));if(v>max)v=max;for(let i=0;i<max;i++){const on=i<v;w.append(h('button',{type:'button',class:'pip'+(on?' on':''),'aria-label':label+' '+(i+1),'aria-pressed':String(on),onclick:()=>{sp(path,v>i?i:i+1);r()}}))}}r();w.rerender=r;return w}
+
+function norm(s){return String(s||'').toLowerCase().replace(/\(.*?\)/g,'').replace(/[x×]\s*\d+|\d+\s*[x×]/g,'').replace(/[^a-z0-9æøåäöüéè]/g,'')}
+function ruleKey(name){const k=norm(name);if(!k)return null;const L=S.lib;if(L[k])return k;if(k.endsWith('s')&&L[k.slice(0,-1)])return k.slice(0,-1);for(const key in L){const aka=L[key].aka||[];if(aka.includes(k)||(k.endsWith('s')&&aka.includes(k.slice(0,-1))))return key}return null}
+const rule=name=>{const k=ruleKey(name);return k?S.lib[k]:null};
+function paras(t){return String(t).split(/\n\s*\n/).map(p=>{const e=h('p');p.split('\n').forEach((l,i)=>{if(i)e.append(h('br'));e.append(l)});return e})}
+const kindOf=key=>key.indexOf('sp.')===0?'spell':key;
+
+/* save state */
+let draftT=null;
+function changed(){dirty=true;updateSaveUI();clearTimeout(draftT);draftT=setTimeout(()=>{try{localStorage.setItem(KEY,JSON.stringify({base:BASE,state:S}))}catch(e){}},400)}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function buildHTML(){const css=document.getElementById('css').textContent;const app=document.getElementById('app').textContent;const json=JSON.stringify(S).replace(/</g,'\\u003c');const end='</'+'script>';return '<!DOCTYPE html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>'+esc((S.f.name||'Character')+' – character sheet')+'</title>'+HEAD_LINKS+'<style id="css">'+css+'</style></head><body><div id="root"></div><script type="application/json" id="state">'+json+end+'<script id="app">'+app+end+'</body></html>'}
+async function save(){if(!ART||saving||RO)return;saving=true;saveMsg='';updateSaveUI();const prev=S.savedAt;S.savedAt=Date.now();try{await ART.publish(buildHTML());dirty=false;saving=false;updateSaveUI()}catch(e){S.savedAt=prev;saving=false;const c=e&&e.code;if(c==='not_writer'||c==='not_granted'){RO=true}else if(c==='conflict'){saveMsg='A newer version was saved elsewhere. Loading it now.'}else if(c==='rate_limited'){saveMsg='Saving too often. Wait a moment, then save again.'}else if(c==='too_large'){saveMsg='Sheet is too large to save. Shorten some rules text.'}else{saveMsg='Save didn’t go through. Try again.'}updateSaveUI()}}
+let saveBtn,statusEl;
+function updateSaveUI(){if(!saveBtn)return;if(RO){saveBtn.hidden=true;statusEl.textContent='View only. Edits stay on this device.';statusEl.className='status';return}if(!ART){saveBtn.hidden=true;statusEl.textContent='Changes kept on this device';statusEl.className='status';return}saveBtn.hidden=false;saveBtn.disabled=saving||!dirty;saveBtn.textContent=saving?'Saving…':'Save sheet';statusEl.textContent=saveMsg||(saving?'':dirty?'Unsaved changes':'Saved');statusEl.className='status'+(dirty||saveMsg?' dirty':'')}
+
+/* entry lists */
+function listBox(key){const wrap=h('div',{class:'list'});function r(){wrap.textContent='';const arr=gp(key)||[];arr.forEach((it,i)=>wrap.append(row(key,i,it,r)));wrap.append(h('button',{type:'button',class:'add',onclick:()=>openEntry(key,-1,r)},'+ '+KINDS[kindOf(key)].add))}r();return wrap}
+function row(key,i,it,r){const k=kindOf(key);const parts=[];
+ if(k==='spell'&&!key.startsWith('sp.levels.0.')){const cb=h('input',{type:'checkbox','aria-label':'Prepared: '+(it.name||'spell')});cb.checked=!!it.prepared;cb.addEventListener('change',()=>sp(key+'.'+i+'.prepared',cb.checked));parts.push(cb)}
+ parts.push(h('button',{type:'button',class:'ename'+(rule(it.name)?'':' norule'),onclick:()=>openEntry(key,i,r)},it.name||'Untitled'));
+ if(it.note)parts.push(h('span',{class:'note'},it.note));
+ if(k==='attacks'){parts.push(h('span',{class:'atk'},it.bonus||''),h('span',{class:'dmg'},it.damage||''))}
+ if(n(it.uses)>0)parts.push(pips(()=>n(it.uses),key+'.'+i+'.used','Uses spent: '+it.name));
+ return h('div',{class:'erow '+k},parts)}
+
+function openEntry(key,idx,rr){
+ const k=kindOf(key);let i=idx;let it=i<0?{name:''}:Object.assign({},gp(key)[i]);
+ let ctrl=null;
+ const m=h('div',{class:'modal',role:'dialog','aria-modal':'true','aria-labelledby':'mt'});
+ const ov=h('div',{class:'ov',onclick:e=>{if(e.target===ov)close()}},m);
+ const prevFocus=document.activeElement;
+ document.body.append(ov);document.body.classList.add('locked');
+ function onKey(e){if(e.key==='Escape')close()}
+ document.addEventListener('keydown',onKey);
+ function close(){if(ctrl)ctrl.abort();ov.remove();document.body.classList.remove('locked');document.removeEventListener('keydown',onKey);if(prevFocus&&prevFocus.focus)prevFocus.focus()}
+ function head(title){return h('div',{class:'mhead'},h('h2',{id:'mt'},title),h('button',{type:'button',class:'x',onclick:close,'aria-label':'Close'},'×'))}
+ function view(){m.textContent='';const R=rule(it.name);
+  m.append(head(it.name||'Untitled'));
+  if(R&&R.tag)m.append(h('p',{class:'tag'},R.tag));
+  const meta=[];
+  if(k==='attacks'){if(it.bonus)meta.push(h('span',{class:'chip'},'Attack ',h('b',null,it.bonus)));if(it.damage)meta.push(h('span',{class:'chip'},'Damage ',h('b',null,it.damage)))}
+  if(n(it.uses)>0)meta.push(h('span',{class:'chip'},'Uses ',h('b',null,(n(it.uses)-Math.min(n(it.used),n(it.uses)))+' of '+n(it.uses)),' left'));
+  if(R&&R.dc==='con')meta.push(h('span',{class:'chip'},'Your rune save DC ',h('b',null,String(runeDC()))));
+  if(k==='spell'&&S.sp.ability){meta.push(h('span',{class:'chip'},'Spell save DC ',h('b',null,String(8+P()+M(S.sp.ability)))),h('span',{class:'chip'},'Spell attack ',h('b',null,sg(P()+M(S.sp.ability)))))}
+  if(it.note)meta.push(h('span',{class:'chip'},it.note));
+  if(meta.length)m.append(h('div',{class:'mmeta'},meta));
+  m.append(h('div',{class:'rules'},R?paras(R.text):h('p',{class:'empty'},'No rules saved for this yet. Choose Edit to write them'+(SAMPLE?', or let Claude draft them.':'.'))));
+  m.append(h('div',{class:'mact'},h('span',{class:'sp'}),h('button',{type:'button',class:'btn ghost',onclick:edit},R?'Edit':'Edit and add rules'),h('button',{type:'button',class:'btn',onclick:close},'Done')));
+  m.querySelector('.x').focus()}
+ function edit(){m.textContent='';const isNew=i<0;
+  m.append(head(isNew?KINDS[k].add:'Edit '+(it.name||'entry')));
+  const nm=h('input',{type:'text',value:it.name||'',placeholder:'Name'});
+  const R0=rule(it.name);
+  const ta=h('textarea',{class:'plain',placeholder:'Rules text: what it does, range, duration, damage, uses…'});ta.value=R0?R0.text:'';
+  const tag=h('input',{type:'text',placeholder:'e.g. Feat, Fighter level 2, 1st-level evocation'});tag.value=R0&&R0.tag?R0.tag:'';
+  const L=(t,el)=>h('label',{class:'fld'},el,h('span',{class:'fl'},t));
+  const f=h('div',{class:'form'},L('Name',nm));
+  let bonus,dmg,uses,note;
+  if(k==='attacks'){bonus=h('input',{type:'text',value:it.bonus||'',placeholder:'+7'});dmg=h('input',{type:'text',value:it.damage||'',placeholder:'2d6+5 slashing'});f.append(h('div',{class:'two'},L('Attack bonus',bonus),L('Damage / type',dmg)))}
+  if(k==='features'||k==='equip'||k==='attacks'||k==='spell'){note=h('input',{type:'text',value:it.note||'',placeholder:k==='features'?'e.g. Carved on: sword':''});uses=h('input',{type:'text',inputmode:'numeric',value:it.uses||'',placeholder:'0'});f.append(h('div',{class:'two'},L('Note',note),k==='features'?L('Uses (tracker dots)',uses):h('span')))}
+  f.append(L('Source / type',tag),L('Rules',ta));
+  const msg=h('div',{class:'msg',role:'status'});
+  const act=h('div',{class:'mact'});
+  if(SAMPLE){const db=h('button',{type:'button',class:'btn ghost'},'Draft rules with Claude');db.addEventListener('click',async()=>{const name=nm.value.trim();if(!name){msg.textContent='Add a name first.';nm.focus();return}if(ctrl)ctrl.abort();ctrl=new AbortController();db.disabled=true;msg.textContent='Claude is writing…';const kind={attacks:'weapon or attack',features:'class feature, feat or trait',prof:'proficiency or language',equip:'item or piece of equipment',spell:'spell'}[k];const ctx='The character is: '+[S.f.race,S.f.classLevel].filter(Boolean).join(' ')+'.';try{const res=await SAMPLE('Write a short rules summary of the Dungeons & Dragons 5th edition '+kind+' called "'+name+'" for a player\'s character sheet. '+ctx+' Write it in your own words as plain text: no markdown, no headings, 2–4 short paragraphs separated by blank lines, under 170 words. Include the key numbers (action type, range, duration, damage, saving throw, uses, recovery). If the 2014 and 2024 rules differ meaningfully, note both briefly. If you are unsure what it is, say so in one sentence.',{signal:ctrl.signal,modelTier:'quick',cache:false,onText:x=>{ta.value=x.text}});ta.value=String(res.text||'').trim();msg.textContent='Check it against your books, then save.'}catch(e){const c=e&&e.code;if(c==='cancelled')return;if(e&&e.text)ta.value=e.text;if(c==='not_granted'){db.remove();msg.textContent='Claude drafting isn’t allowed in this view. Write the rules yourself.'}else if(c==='rate_limited')msg.textContent='Too many requests right now. Try again in a minute.';else msg.textContent='Couldn’t draft the rules. Try again or write them yourself.'}finally{db.disabled=false}});act.append(db)}
+  act.append(h('span',{class:'sp'}));
+  if(!isNew){let armed=false;const del=h('button',{type:'button',class:'btn danger'},'Delete');del.addEventListener('click',()=>{if(!armed){armed=true;del.textContent='Tap again to delete';return}const arr=gp(key);arr.splice(i,1);changed();rr();close()});act.append(del)}
+  act.append(h('button',{type:'button',class:'btn ghost',onclick:()=>{if(ctrl)ctrl.abort();isNew?close():view()}},'Cancel'));
+  act.append(h('button',{type:'button',class:'btn accent',onclick:()=>{
+   const name=nm.value.trim();if(!name){msg.textContent='Give it a name.';nm.focus();return}
+   it.name=name;if(bonus){it.bonus=bonus.value.trim();it.damage=dmg.value.trim()}if(note)it.note=note.value.trim()||undefined;if(k==='features'){it.uses=uses.value.trim();it.used=Math.min(n(it.used),n(it.uses))}
+   const text=ta.value.trim();const rk=ruleKey(name);
+   if(text){if(rk){S.lib[rk].text=text;S.lib[rk].tag=tag.value.trim()}else{S.lib[norm(name)]={name,tag:tag.value.trim(),text}}}
+   else if(rk&&R0&&ruleKey(it.name)===rk&&ruleKey(name)===rk){delete S.lib[rk]}
+   const arr=gp(key);if(i<0){arr.push(it);i=arr.length-1}else arr[i]=it;it=Object.assign({},arr[i]);
+   changed();rr();view()}},'Save'));
+  m.append(f,msg,act);nm.focus()}
+ i<0?edit():view();
+}
+
+/* pages */
+function sheetPage(){
+ const head=h('div',{class:'head'},
+  h('label',{class:'fld cname'},inp('f.name',{label:'Character name',after:()=>{}}),h('span',{class:'fl'},'Character name')),
+  h('div',{class:'meta'},fld('f.classLevel','Class & level'),fld('f.background','Background'),fld('f.player','Player name'),fld('f.race','Race'),fld('f.alignment','Alignment'),fld('f.xp','Experience points',{num:true})));
+
+ const abils=h('div',{class:'abils'},ABIL.map(([a,l])=>h('div',{class:'abil'},h('span',{class:'an'},l),dv(()=>sg(M(a)),'am'),inp('f.'+a,{label:l+' score',num:true}))));
+
+ const insp=h('input',{type:'checkbox'});insp.checked=!!S.f.insp;insp.addEventListener('change',()=>sp('f.insp',insp.checked));
+ const pb=inp('f.prof',{label:'Proficiency bonus',num:true,cls:'profin'});
+ const top=h('div',{class:'row2'},h('div',{class:'insp',style:'flex:1'},h('label',null,insp,'Inspiration')),h('div',{class:'insp',style:'flex:1.4'},h('label',null,pb,'Proficiency bonus')));
+
+ const saves=h('ul',{class:'checks'},ABIL.map(([a,l])=>{const cb=h('input',{type:'checkbox'});cb.checked=!!(S.f.saves||{})[a];cb.addEventListener('change',()=>{sp('f.saves.'+a,cb.checked);derive()});return h('li',null,h('label',null,cb,dv(()=>sg(saveV(a)),'v'),l))}));
+ const skills=h('ul',{class:'checks'},SKILLS.map(([k,l,a])=>{const cb=h('input',{type:'checkbox'});cb.checked=!!(S.f.skills||{})[k];cb.addEventListener('change',()=>{sp('f.skills.'+k,cb.checked);derive()});return h('li',null,h('label',null,cb,dv(()=>sg(skillV(k,a)),'v'),l,h('span',{class:'ab'},SHORT[a])))}));
+ const passive=h('div',{class:'passive'},dv(()=>String(10+skillV('perception','wis')),'big'),h('span',{class:'sc'},'Passive Wisdom (Perception)'));
+
+ const tiles=h('div',{class:'tiles'},
+  h('label',{class:'tile shield'},inp('f.ac',{label:'Armor class',num:true}),h('span',{class:'fl'},'Armor class')),
+  h('div',{class:'tile'},dv(()=>sg(M('dex')),'big'),h('span',{class:'fl'},'Initiative')),
+  h('label',{class:'tile'},inp('f.speed',{label:'Speed',num:true}),h('span',{class:'fl'},'Speed')));
+ const hp=box('Hit points',h('div',{class:'hp'},h('label',{class:'fld cur'},inp('f.hpCur',{label:'Current hit points',num:true}),h('span',{class:'fl'},'Current')),fld('f.hpMax','Maximum',{num:true}),fld('f.hpTemp','Temporary',{num:true})));
+ const hd=box('Hit dice & death saves',h('div',{style:'display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:end'},fld('f.hdTotal','Total'),fld('f.hdType','Die'),h('div',{class:'ds',style:'grid-column:1/-1'},h('span',null,'Successes'),pips(()=>3,'f.dsS','Death save successes'),h('span',null,'Failures'),pips(()=>3,'f.dsF','Death save failures','red'))));
+
+ const attacks=box('Attacks',[h('p',{class:'hint'},'Tap a name to see its rules.'),listBox('attacks')]);
+ const features=box('Features & traits',[h('p',{class:'hint'},'Tap a name to see its rules. Dots track uses.'),listBox('features')]);
+ const profs=box('Other proficiencies & languages',listBox('prof'));
+ const equip=box('Equipment',[listBox('equip'),h('div',{class:'coins'},['cp','sp','ep','gp','pp'].map(c=>fld('f.coins.'+c,c.toUpperCase(),{num:true})))]);
+ const pers=box('Personality',h('div',{class:'form',style:'margin-top:0'},fld('f.traits','Personality traits',{area:true,rows:2}),fld('f.ideals','Ideals',{area:true,rows:2}),fld('f.bonds','Bonds',{area:true,rows:2}),fld('f.flaws','Flaws',{area:true,rows:2})));
+
+ return h('div',null,head,h('div',{class:'grid'},
+  h('div',{class:'col'},abils),
+  h('div',{class:'col'},top,box('Saving throws',saves),box('Skills',skills),passive),
+  h('div',{class:'col'},tiles,hp,hd,attacks,features),
+  h('div',{class:'col span2'},pers,profs,equip)));
+}
+function storyPage(){
+ return h('div',null,
+  h('div',{class:'head'},h('div',{class:'bar-name serif',style:'font-size:2rem'},dv(()=>S.f.name||'Unnamed')),h('div',{class:'phys'},fld('f.age','Age'),fld('f.height','Height'),fld('f.weight','Weight'),fld('f.eyes','Eyes'),fld('f.skin','Skin'),fld('f.hair','Hair'))),
+  h('div',{class:'story'},
+   h('div',{class:'col'},box('Character appearance',inp('f.appearance',{area:true,rows:7,label:'Character appearance',ph:'What do people notice first?'})),box('Character backstory',inp('f.backstory',{area:true,rows:14,label:'Character backstory'}))),
+   h('div',{class:'col'},box('Allies & organizations',h('div',{class:'form',style:'margin-top:0'},inp('f.allies',{area:true,rows:5,label:'Allies and organizations'}),h('div',{class:'two',style:'display:grid;grid-template-columns:1fr 1fr;gap:12px'},fld('f.orgName','Organization name'),fld('f.symbol','Symbol')))),box('Additional features & traits',inp('f.addFeatures',{area:true,rows:6,label:'Additional features and traits'})),box('Treasure',inp('f.treasure',{area:true,rows:7,label:'Treasure'})))));
+}
+function spellPage(){
+ const sel=h('select',{'aria-label':'Spellcasting ability'},h('option',{value:''},'None'),ABIL.map(([a,l])=>h('option',{value:a},l)));sel.value=S.sp.ability||'';sel.addEventListener('change',()=>{sp('sp.ability',sel.value);derive()});
+ const hd=h('div',{class:'spellhead'},fld('sp.cls','Spellcasting class'),h('label',{class:'fld'},sel,h('span',{class:'fl'},'Spellcasting ability')),h('div',{class:'tile'},dv(()=>S.sp.ability?String(8+P()+M(S.sp.ability)):'–','big'),h('span',{class:'fl'},'Spell save DC')),h('div',{class:'tile'},dv(()=>S.sp.ability?sg(P()+M(S.sp.ability)):'–','big'),h('span',{class:'fl'},'Spell attack bonus')));
+ const grid=h('div',{class:'spellgrid'},S.sp.levels.map((L,lv)=>{const key='sp.levels.'+lv+'.list';const has=L.list.length>0||n(L.slots)>0;
+  const d=h('details',{class:'box lvl',open:(has||lv<=1)?true:null});
+  const cnt=dv(()=>{const c=S.sp.levels[lv].list.length;return c?c+(c===1?' spell':' spells'):''},'cnt');
+  d.append(h('summary',null,h('span',{class:'ln'},String(lv)),h('span',{class:'lt'},lv===0?'Cantrips':'Level '+lv),cnt));
+  const body=h('div',{class:'body'});
+  if(lv>0){const pp=pips(()=>Math.min(n(S.sp.levels[lv].slots),12),'sp.levels.'+lv+'.used','Level '+lv+' slots expended');body.append(h('div',{class:'slots'},h('label',null,'Slots ',inp('sp.levels.'+lv+'.slots',{label:'Level '+lv+' slots total',num:true,after:()=>pp.rerender()})),h('span',null,'Expended'),pp))}
+  if(lv===1)body.append(h('p',{class:'hint'},'Tick the box to mark a spell prepared.'));
+  body.append(listBox(key));d.append(body);return d}));
+ return h('div',null,hd,grid);
+}
+
+/* shell */
+let tab='sheet';try{tab=localStorage.getItem('charsheet-blank-tab')||'sheet'}catch(e){}
+function render(){
+ const root=document.getElementById('root');root.textContent='';for(const k in D)delete D[k];
+ statusEl=h('span',{class:'status',role:'status'});saveBtn=h('button',{type:'button',class:'btn',onclick:save,hidden:true},'Save sheet');
+ const pages={sheet:['Sheet',sheetPage],story:['Story',storyPage],spells:['Spells',spellPage]};
+ const tabs=h('div',{class:'tabs',role:'tablist'});const main=h('main');
+ for(const id in pages){const pg=h('div',{class:'page',role:'tabpanel',id:'p-'+id,hidden:tab!==id},pages[id][1]());main.append(pg);
+  tabs.append(h('button',{type:'button',class:'tab',role:'tab','aria-selected':String(tab===id),'aria-controls':'p-'+id,onclick:e=>{tab=id;try{localStorage.setItem('charsheet-blank-tab',id)}catch(_){}tabs.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',String(t===e.currentTarget)));main.querySelectorAll('.page').forEach(p=>p.hidden=p.id!=='p-'+id);window.scrollTo(0,0)}},pages[id][0]))}
+ let armed=false;const blank=h('button',{type:'button',class:'btn danger'},'Start a blank sheet');
+ blank.addEventListener('click',()=>{if(!armed){armed=true;blank.textContent='Tap again to clear every field (rules stay)';return}
+  const keepLib=S.lib;S={savedAt:S.savedAt,f:{prof:'2',saves:{},skills:{},coins:{},dsS:0,dsF:0},attacks:[],features:[],prof:[],equip:[],sp:{cls:'',ability:'',levels:Array.from({length:10},()=>({slots:'',used:0,list:[]}))},lib:keepLib};changed();render();window.scrollTo(0,0)});
+ main.append(h('div',{class:'foot'},blank));
+ root.append(h('header',{class:'bar'},h('div',{class:'bar-in'},h('div',{class:'bar-name'},dv(()=>S.f.name||'Unnamed')),tabs,h('div',{class:'savewrap'},statusEl,saveBtn))),main);
+ updateSaveUI();
+}
+render();
+document.addEventListener('input',e=>{if(e.target.closest&&e.target.closest('.cname'))derive()});
+if(window.claude&&typeof window.claude.use==='function'){
+ window.claude.use('artifact').then(a=>{ART=a;updateSaveUI()}).catch(()=>{});
+ window.claude.use('sample').then(s=>{SAMPLE=s}).catch(()=>{});
+}
+})();
+</script></body></html>
