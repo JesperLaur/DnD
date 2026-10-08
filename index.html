@@ -208,6 +208,45 @@ input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appear
 .modal .form textarea{min-height:220px}
 .msg{font-size:.88rem;color:var(--accent);min-height:1.2em}
 
+/* compact layout on tablets and desktops */
+@media(min-width:760px){
+ html{font-size:14px}
+ body{font-size:15px;line-height:1.35}
+ .bar-in{padding:5px 14px}
+ .tab{padding:4px 12px}
+ main{padding:10px 12px 40px}
+ .head{gap:10px;margin-bottom:10px}
+ .meta{gap:4px 14px}
+ .cname input{font-size:2rem}
+ .grid,.col{gap:10px}
+ .box>.body{padding:8px 10px}
+ .lab{padding:2px 8px 3px}
+ .fld input,.fld select{padding:2px}
+ .abils{gap:6px}
+ .abil{padding:4px 6px 6px}
+ .abil input{font-size:1.9rem;margin:0 0 3px}
+ .tiles{gap:8px}
+ .tile{padding:5px 4px 3px}
+ .tile .big,.tile input{font-size:1.6rem}
+ .insp{padding:5px 10px}
+ .checks li{padding:1px 0}
+ .checks input{width:16px;height:16px}
+ .hp .cur input{font-size:2.1rem}
+ .erow{padding:4px 0}
+ .atable td{padding:4px 5px}
+ .tr{padding:4px 0}
+ .tr .pip{width:18px;height:18px}
+ .add{padding:3px;margin-top:6px}
+ .hint{margin:0 0 3px}
+ .rests{margin-top:6px}
+ .coins{margin-top:8px}
+ .notes textarea{min-height:140px}
+ .spellhead{gap:10px;margin-bottom:10px}
+ .spellgrid,.story{gap:10px}
+ .lvl summary{padding:6px 10px}
+ .lvl .ln{font-size:1.35rem}
+}
+
 /* print / PDF */
 @page{margin:12mm}
 @media print{
