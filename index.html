@@ -341,15 +341,15 @@ function updateSaveUI(){if(!saveBtn)return;if(RO){saveBtn.hidden=true;statusEl.t
 function grip(key,i,r){const g=h('span',{class:'grip',role:'button',tabindex:'0','data-grip':key+':'+i,title:'Drag to reorder','aria-label':'Reorder. Drag, or use the arrow keys.'},'⠿');
  g.addEventListener('keydown',e=>{if(e.key!=='ArrowUp'&&e.key!=='ArrowDown')return;e.preventDefault();const arr=gp(key),j=i+(e.key==='ArrowUp'?-1:1);if(j<0||j>=arr.length)return;
   [arr[i],arr[j]]=[arr[j],arr[i]];changed();r();const ng=document.querySelector('[data-grip="'+key+':'+j+'"]');if(ng)ng.focus()});
- g.addEventListener('pointerdown',e=>{if(e.button)return;e.preventDefault();const row=g.closest('[data-i]'),box=row.parentNode;g.setPointerCapture(e.pointerId);row.classList.add('dragging');
-  const move=ev=>{if(ev.clientY<60)window.scrollBy(0,-12);else if(ev.clientY>window.innerHeight-40)window.scrollBy(0,12);
+ g.addEventListener('pointerdown',e=>{if(e.button)return;e.preventDefault();const row=g.closest('[data-i]'),box=row.parentNode,pid=e.pointerId;row.classList.add('dragging');
+  const move=ev=>{if(ev.pointerId!==pid)return;if(ev.clientY<60)window.scrollBy(0,-12);else if(ev.clientY>window.innerHeight-40)window.scrollBy(0,12);
    const items=[...box.children].filter(x=>x.dataset.i!=null&&x!==row);let before=null;
    for(const it of items){const b=it.getBoundingClientRect();if(ev.clientY<b.top+b.height/2){before=it;break}}
    if(before){if(row.nextSibling!==before)box.insertBefore(row,before)}else if(items.length){const last=items[items.length-1];if(last.nextSibling!==row)last.after(row)}};
-  const up=()=>{g.removeEventListener('pointermove',move);g.removeEventListener('pointerup',up);g.removeEventListener('pointercancel',up);row.classList.remove('dragging');
+  const up=ev=>{if(ev.pointerId!==pid)return;window.removeEventListener('pointermove',move);window.removeEventListener('pointerup',up);window.removeEventListener('pointercancel',up);row.classList.remove('dragging');
    const order=[...box.children].filter(x=>x.dataset.i!=null).map(x=>n(x.dataset.i));const arr=gp(key);
    if(order.some((v,j)=>v!==j)){const copy=order.map(j=>arr[j]);arr.splice(0,arr.length,...copy);changed()}r()};
-  g.addEventListener('pointermove',move);g.addEventListener('pointerup',up);g.addEventListener('pointercancel',up)});
+  window.addEventListener('pointermove',move);window.addEventListener('pointerup',up);window.addEventListener('pointercancel',up)});
  return g}
 function listBox(key){const wrap=h('div',{class:'list'});function r(){wrap.textContent='';const arr=gp(key)||[];arr.forEach((it,i)=>wrap.append(row(key,i,it,r)));wrap.append(h('button',{type:'button',class:'add',onclick:()=>openEntry(key,-1,r)},'+ '+KINDS[kindOf(key)].add))}r();return wrap}
 function row(key,i,it,r){const k=kindOf(key);const parts=[];
