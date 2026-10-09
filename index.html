@@ -54,14 +54,32 @@ input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appear
 @media(min-width:760px){.head{grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);align-items:end}.meta{grid-template-columns:repeat(3,minmax(0,1fr))}}
 
 /* sheet grid */
-.grid{display:grid;gap:14px;grid-template-columns:1fr}
 .col{display:flex;flex-direction:column;gap:14px;min-width:0}
-@media(min-width:760px){.grid{grid-template-columns:150px minmax(0,1fr)}.grid>.span2{grid-column:1/-1}}
-@media(min-width:1060px){.grid{grid-template-columns:150px minmax(0,1fr) minmax(0,1.15fr) minmax(0,1fr)}.grid>.span2{grid-column:auto}}
+/* movable / resizable layout: bands of columns holding blocks; stacked below 900px */
+.lay,.band{display:flex;flex-direction:column;gap:14px}
+@media(min-width:900px){.band{display:grid;grid-template-columns:var(--cols)}}
+.lcol{position:relative}
+.blk{position:relative;display:flex;flex-direction:column;min-width:0}
+.blk>.box{flex:1}
+@media(min-width:900px){.lcol>.blk:last-of-type{flex:1}.blk.fixh>:first-child{height:var(--h);overflow:auto;flex:none}}
+.bmove,.bsz,.csz{display:none}
+.layctl{display:none;align-items:center;gap:10px;justify-content:flex-end;margin:-4px 0 8px;font-size:.85rem;color:var(--muted)}
+.layctl .btn{padding:3px 12px;font-size:.85rem}
+.layhelp{display:none;flex:1}
+@media(min-width:900px){
+ .layctl{display:flex}
+ body.editlay .layhelp{display:block}
+ body.editlay .lcol{min-height:80px;outline:1px dashed var(--line);outline-offset:4px;border-radius:6px}
+ body.editlay .blk{outline:1.5px dashed var(--accent);outline-offset:2px;border-radius:6px}
+ body.editlay .blk.dragging{opacity:.75}
+ body.editlay .bmove{display:grid;place-items:center;position:absolute;top:-9px;left:-9px;z-index:6;width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--accent-ink);cursor:grab;touch-action:none;user-select:none;font-size:.95rem;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+ body.editlay .bsz{display:block;position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);z-index:6;width:46px;height:10px;border-radius:6px;background:var(--accent);cursor:ns-resize;touch-action:none}
+ body.editlay .csz{display:block;position:absolute;top:0;bottom:0;right:-10px;z-index:5;width:7px;border-radius:4px;background:var(--line);cursor:ew-resize;touch-action:none}
+ body.editlay .csz:hover{background:var(--accent)}
+}
 
 /* abilities */
-.abils{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-@media(min-width:760px){.abils{grid-template-columns:1fr}}
+.abils{display:grid;grid-template-columns:repeat(auto-fit,minmax(92px,1fr));gap:10px}
 .abil{background:var(--sheet);border:1px solid var(--line);border-radius:14px 14px 40px 40px/14px 14px 22px 22px;text-align:center;padding:8px 6px 10px;display:flex;flex-direction:column;align-items:center}
 .abil .an{font-family:"Alegreya SC",Georgia,serif;font-size:.85rem;color:var(--muted)}
 .abil input{width:100%;text-align:center;border:0;background:transparent;font-family:"Alegreya",Georgia,serif;font-weight:800;font-size:2.3rem;line-height:1;margin:2px 0 6px;padding:0}
@@ -154,11 +172,7 @@ input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appear
 .opts label{display:flex;align-items:center;gap:6px}
 .opts input{width:17px;height:17px;accent-color:var(--accent);margin:0}
 
-.grid>.notes,.grid>.equipw{grid-column:1/-1}
-@media(min-width:1060px){.grid>.equipw{grid-column:1/3;grid-row:2}.grid>.notes{grid-column:3/5;grid-row:2}}
-.equipw .box{flex:1}
-.notes .box{flex:1}
-.notes textarea{width:100%;min-height:180px;background:transparent;border:1px solid var(--soft);border-radius:6px;padding:8px;resize:vertical;line-height:1.45}
+.b-notes textarea{width:100%;min-height:180px;background:transparent;border:1px solid var(--soft);border-radius:6px;padding:8px;resize:vertical;line-height:1.45}
 .coins{display:grid;grid-template-columns:repeat(auto-fit,minmax(42px,1fr));gap:6px;margin-top:12px}
 .coins .fld input{text-align:center}
 .coins .fl{text-align:center}
@@ -218,7 +232,7 @@ input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appear
  .head{gap:10px;margin-bottom:10px}
  .meta{gap:4px 14px}
  .cname input{font-size:2rem}
- .grid,.col{gap:10px}
+ .lay,.band,.col{gap:10px}
  .box>.body{padding:8px 10px}
  .lab{padding:2px 8px 3px}
  .fld input,.fld select{padding:2px}
@@ -252,7 +266,7 @@ input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appear
 @media print{
  :root,:root[data-theme="dark"],:root:not([data-theme="light"]){--paper:#fff;--sheet:#fff;--ink:#1B2130;--muted:#586070;--line:#B0B6C0;--soft:#D5DAE0;--accent:#8C2A22;--accent-ink:#FFF6F3;--bronze:#7E6128;color-scheme:light}
  body{background:#fff;font-size:13px}
- .bar,.foot,.add,.rests,.hint,.ov{display:none!important}
+ .bar,.foot,.add,.rests,.hint,.ov,.layctl,.bmove,.bsz,.csz{display:none!important}
  main{max-width:none;padding:0}
  .page[hidden]{display:block!important}
  .page+.page{break-before:page}
@@ -494,14 +508,57 @@ function sheetPage(){
  const profs=box('Other proficiencies & languages',listBox('prof'));
  const equip=box('Equipment',[listBox('equip'),h('div',{class:'coins'},['cp','sp','ep','gp','pp'].map(c=>fld('f.coins.'+c,c.toUpperCase(),{num:true})))]);
 
- return h('div',null,head,h('div',{class:'grid'},
-  h('div',{class:'col'},abils,passive),
-  h('div',{class:'col'},top,box('Saving throws',saves),box('Skills',skills)),
-  h('div',{class:'col'},tiles,hp,hd,attacks),
-  h('div',{class:'col span2'},profs,features),
-  h('div',{class:'col equipw'},equip),
-  h('div',{class:'col notes'},box('Notes',inp('f.notes',{area:true,rows:8,label:'Notes',ph:'Session notes, NPCs, quests, loot to split…'})))));
+ const notes=box('Notes',inp('f.notes',{area:true,rows:8,label:'Notes',ph:'Session notes, NPCs, quests, loot to split…'}));
+
+ return h('div',null,head,layoutView({abils,passive,top,saves:box('Saving throws',saves),skills:box('Skills',skills),tiles,hp,hd,attacks,profs,features,equip,notes}));
 }
+
+/* sheet layout: boxes live in columns inside bands; S.layout stores order, column widths and fixed heights */
+const BOX_IDS=['abils','passive','top','saves','skills','tiles','hp','hd','attacks','profs','features','equip','notes'];
+const DEF_LAYOUT=()=>({bands:[{w:[.5,1,1.15,1],cols:[['abils','passive'],['top','saves','skills'],['tiles','hp','hd','attacks'],['profs','features']]},{w:[1.5,2.15],cols:[['equip'],['notes']]}],h:{}});
+let EDIT=false;
+function getLayout(){const L=S.layout&&Array.isArray(S.layout.bands)?JSON.parse(JSON.stringify(S.layout)):DEF_LAYOUT();const seen=new Set();
+ L.bands.forEach(b=>{b.cols=b.cols.map(c=>c.filter(id=>BOX_IDS.includes(id)&&!seen.has(id)&&seen.add(id)))});
+ BOX_IDS.forEach(id=>{if(!seen.has(id)){const c=L.bands[0].cols;c[c.length-1].push(id)}});L.h=L.h||{};return L}
+function layoutView(content){const L=getLayout();const lay=h('div',{class:'lay'});
+ const commit=()=>{S.layout=L;changed()};
+ const colsCss=b=>b.w.map(x=>'minmax(0,'+x.toFixed(3)+'fr)').join(' ');
+ const drag=(e,onMove,onUp)=>{if(e.button)return;e.preventDefault();const pid=e.pointerId,x0=e.clientX,y0=e.clientY;
+  const mv=ev=>{if(ev.pointerId===pid)onMove(ev,ev.clientX-x0,ev.clientY-y0)};
+  const up=ev=>{if(ev.pointerId!==pid)return;window.removeEventListener('pointermove',mv);window.removeEventListener('pointerup',up);window.removeEventListener('pointercancel',up);onUp()};
+  window.addEventListener('pointermove',mv);window.addEventListener('pointerup',up);window.addEventListener('pointercancel',up)};
+ const B={};
+ for(const id of BOX_IDS){const blk=h('div',{class:'blk b-'+id,'data-b':id},content[id]);
+  if(L.h[id]){blk.classList.add('fixh');blk.style.setProperty('--h',L.h[id]+'px')}
+  const mvh=h('span',{class:'bmove',title:'Drag to move this box'},'⠿');
+  mvh.addEventListener('pointerdown',e=>{blk.classList.add('dragging');drag(e,ev=>{
+    if(ev.clientY<60)window.scrollBy(0,-14);else if(ev.clientY>window.innerHeight-40)window.scrollBy(0,14);
+    const col=document.elementsFromPoint(ev.clientX,ev.clientY).find(x=>x.classList&&x.classList.contains('lcol'));if(!col)return;
+    const items=[...col.children].filter(x=>x.dataset.b&&x!==blk);let before=null;
+    for(const it of items){const r=it.getBoundingClientRect();if(ev.clientY<r.top+r.height/2){before=it;break}}
+    if(before){if(blk.nextSibling!==before)col.insertBefore(blk,before)}
+    else if(items.length){const last=items[items.length-1];if(last.nextSibling!==blk)last.after(blk)}
+    else if(blk.parentNode!==col)col.prepend(blk)},
+   ()=>{blk.classList.remove('dragging');[...lay.children].forEach((band,bi)=>{L.bands[bi].cols=[...band.children].filter(c=>c.classList.contains('lcol')).map(c=>[...c.children].filter(x=>x.dataset.b).map(x=>x.dataset.b))});commit()})});
+  const szh=h('span',{class:'bsz',title:'Drag to change height. Double-click to reset.'});
+  szh.addEventListener('pointerdown',e=>{const h0=content[id].getBoundingClientRect().height;let nh=h0;drag(e,(ev,dx,dy)=>{nh=Math.max(50,Math.round(h0+dy));blk.classList.add('fixh');blk.style.setProperty('--h',nh+'px')},()=>{L.h[id]=nh;commit()})});
+  szh.addEventListener('dblclick',()=>{delete L.h[id];blk.classList.remove('fixh');blk.style.removeProperty('--h');commit()});
+  blk.append(mvh,szh);B[id]=blk}
+ L.bands.forEach((b,bi)=>{const band=h('div',{class:'band'});band.style.setProperty('--cols',colsCss(b));
+  b.cols.forEach((ids,ci)=>{const col=h('div',{class:'col lcol'},ids.map(id=>B[id]));
+   if(ci<b.cols.length-1){const cz=h('span',{class:'csz',title:'Drag to change column widths. Double-click to reset.'});
+    cz.addEventListener('pointerdown',e=>{const w0=b.w.slice(),tot=w0.reduce((a,c)=>a+c,0),per=tot/band.getBoundingClientRect().width,min=tot*.07;
+     drag(e,(ev,dx)=>{let a=w0[ci]+dx*per,c=w0[ci+1]-dx*per;if(a<min){c-=min-a;a=min}if(c<min){a-=min-c;c=min}b.w[ci]=a;b.w[ci+1]=c;band.style.setProperty('--cols',colsCss(b))},commit)});
+    cz.addEventListener('dblclick',()=>{const d=DEF_LAYOUT().bands[bi];if(d&&d.w.length===b.w.length){b.w=d.w.slice();band.style.setProperty('--cols',colsCss(b));commit()}});
+    col.append(cz)}
+   band.append(col)});
+  lay.append(band)});
+ const tog=h('button',{type:'button',class:'btn ghost'},EDIT?'Done':'Edit layout');
+ tog.addEventListener('click',()=>{EDIT=!EDIT;document.body.classList.toggle('editlay',EDIT);tog.textContent=EDIT?'Done':'Edit layout'});
+ const reset=h('button',{type:'button',class:'btn ghost'},'Reset layout');
+ reset.addEventListener('click',()=>{delete S.layout;changed();const y=window.scrollY;render();window.scrollTo(0,y)});
+ const ctl=h('div',{class:'layctl'},h('span',{class:'layhelp'},'Drag a red ⠿ to move a box. Drag the bar under a box, or between columns, to resize. Double-click a bar to reset it.'),reset,tog);
+ return h('div',null,ctl,lay)}
 function storyPage(){
  return h('div',null,
   h('div',{class:'head'},h('div',{class:'bar-name serif',style:'font-size:2rem'},dv(()=>S.f.name||'Unnamed')),h('div',{class:'phys'},fld('f.age','Age'),fld('f.height','Height'),fld('f.weight','Weight'),fld('f.eyes','Eyes'),fld('f.skin','Skin'),fld('f.hair','Hair'))),
@@ -534,7 +591,7 @@ function render(){
   tabs.append(h('button',{type:'button',class:'tab',role:'tab','aria-selected':String(tab===id),'aria-controls':'p-'+id,onclick:e=>{tab=id;try{localStorage.setItem('charsheet-blank-tab',id)}catch(_){}tabs.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',String(t===e.currentTarget)));main.querySelectorAll('.page').forEach(p=>p.hidden=p.id!=='p-'+id);window.scrollTo(0,0)}},pages[id][0]))}
  let armed=false;const blank=h('button',{type:'button',class:'btn danger'},'Start a blank sheet');
  blank.addEventListener('click',()=>{if(!armed){armed=true;blank.textContent='Tap again to clear every field (rules stay)';return}
-  const keepLib=S.lib;S={savedAt:S.savedAt,f:{prof:'2',saves:{},skills:{},coins:{},dsS:0,dsF:0},attacks:[],features:[],prof:[],equip:[],sp:{cls:'',ability:'',levels:Array.from({length:10},()=>({slots:'',used:0,list:[]}))},lib:keepLib};changed();render();window.scrollTo(0,0)});
+  const keepLib=S.lib;S={savedAt:S.savedAt,f:{prof:'2',saves:{},skills:{},coins:{},dsS:0,dsF:0},attacks:[],features:[],prof:[],equip:[],sp:{cls:'',ability:'',levels:Array.from({length:10},()=>({slots:'',used:0,list:[]}))},lib:keepLib,layout:S.layout};changed();render();window.scrollTo(0,0)});
  main.append(h('div',{class:'foot'},blank));
  root.append(h('header',{class:'bar'},h('div',{class:'bar-in'},h('div',{class:'bar-name'},dv(()=>S.f.name||'Unnamed')),tabs,h('div',{class:'savewrap'},statusEl,saveBtn))),main);
  updateSaveUI();
